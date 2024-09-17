@@ -1,6 +1,6 @@
-## MiceWine Emulator
+## Windroid e um Emulator fork do MiceWine
 
-MiceWine is a project that aims to run Windows applications and games on Android smartphones.
+Windroid is a project that aims to run Windows applications and games on Android smartphones.
 
 It uses a customized build of Wine compiled for Android and Box64 to run in the best possible way.
 
