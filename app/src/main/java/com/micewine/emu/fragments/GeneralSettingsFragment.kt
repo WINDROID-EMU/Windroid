@@ -13,34 +13,32 @@ import com.micewine.emu.adapters.AdapterSettings.SettingsList
 
 class GeneralSettingsFragment : Fragment() {
     private val settingsList: MutableList<SettingsList> = ArrayList()
-    private var rootView: View? = null
     private var recyclerView: RecyclerView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_general_settings, container, false)
-        recyclerView = rootView?.findViewById(R.id.recyclerViewGeneralSettings)
-
+    ): View = inflater.inflate(R.layout.fragment_general_settings, container, false).apply {
+        recyclerView = findViewById(R.id.recyclerViewGeneralSettings)
         setAdapter()
-
-        return rootView
     }
 
     private fun setAdapter() {
-        recyclerView?.setAdapter(AdapterSettings(settingsList, requireContext()))
-
+        // Limpa a lista antes de adicionar os itens
         settingsList.clear()
 
-        if (Build.SUPPORTED_ABIS[0] != "x86_64") {
+        // Verifica se o primeiro ABI suportado não é "x86_64"
+        if (Build.SUPPORTED_ABIS.firstOrNull() != "x86_64") {
             addToAdapter(R.string.box64_settings_title, R.string.box64_settings_description, R.drawable.ic_box64)
         }
 
         addToAdapter(R.string.wine_settings_title, R.string.wine_settings_description, R.drawable.ic_wine)
         addToAdapter(R.string.display_settings_title, R.string.display_settings_description, R.drawable.ic_display)
         addToAdapter(R.string.driver_settings_title, R.string.driver_settings_description, R.drawable.ic_gpu)
+
+        // Define o adapter após popular a lista
+        recyclerView?.adapter = AdapterSettings(settingsList, requireContext())
     }
 
     private fun addToAdapter(titleId: Int, descriptionId: Int, icon: Int) {
