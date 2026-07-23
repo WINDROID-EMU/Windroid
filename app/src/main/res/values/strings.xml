@@ -245,6 +245,10 @@
     <string name="enable_xinput">Enable XInput</string>
     <string name="enable_directinput">Enable DirectInput</string>
     <string name="other_controller_settings">Other Controller Settings</string>
+    <string name="virtual_controller_mode">Virtual Controller Mode</string>
+    <string name="virtual_controller_mode_description">Select the emulation mode for the virtual controller. HID mode is compatible with older games, WINEXINPUT mode enables Windows.Gaming.Input support.</string>
+    <string name="virtual_controller_mode_hid">HID (Legacy)</string>
+    <string name="virtual_controller_mode_winexinput">WINEXINPUT (Windows.Gaming.Input)</string>
     <string name="downloading_rootfs">Downloading RootFS</string>
     <string name="download_successful">Download Successful!</string>
     <string name="select_rootfs_file">Select RootFS File</string>

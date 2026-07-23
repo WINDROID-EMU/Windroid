@@ -233,5 +233,9 @@ public class EnvVars {
         // Force SDL Games to use DInput/XInput (RawInput and WGI don't works)
         vars.add("SDL_JOYSTICK_WGI=0");
         vars.add("SDL_JOYSTICK_RAWINPUT=0");
+
+        // Virtual controller mode (HID or WINEXINPUT)
+        boolean useWinexinputMode = preferences.getBoolean("virtual_controller_mode", false);
+        vars.add("MICEWINE_CONTROLLER_MODE=" + (useWinexinputMode ? "WINEXINPUT" : "HID"));
     }
 }

@@ -38,6 +38,8 @@ import com.micewine.emu.R;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import android.content.SharedPreferences;
+
 public class ControllerSettingsFragment extends DialogFragment {
     private List<TextView> controllersMappingTypeTexts;
     private List<Spinner> controllersMappingTypeSpinners;
@@ -46,6 +48,7 @@ public class ControllerSettingsFragment extends DialogFragment {
     private List<Spinner> controllersKeyboardPresetSpinners;
     private List<TextView> controllersKeyboardPresetTexts;
     private List<TextView> controllersNamesTexts;
+    private Spinner virtualControllerModeSpinner;
     private final List<String> mappingTypes = List.of("MiceWine Controller", "Keyboard/Mouse");
     private final List<String> controllerProfilesNames =
             getControllerPresets().stream()
@@ -191,6 +194,24 @@ public class ControllerSettingsFragment extends DialogFragment {
                 view.findViewById(R.id.controller3Name)
         );
 
+        virtualControllerModeSpinner = view.findViewById(R.id.virtualControllerModeSpinner);
+        List<String> controllerModes = List.of(
+                getString(R.string.virtual_controller_mode_hid),
+                getString(R.string.virtual_controller_mode_winexinput)
+        );
+        virtualControllerModeSpinner.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllerModes));
+        virtualControllerModeSpinner.setSelection(getVirtualControllerMode() ? 1 : 0);
+        virtualControllerModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                putVirtualControllerMode(pos == 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         updateControllerStatus();
 
         buttonConfirm.setOnClickListener((v) -> dismiss());
@@ -209,4 +230,15 @@ public class ControllerSettingsFragment extends DialogFragment {
     }
 
     public final static String ACTION_UPDATE_CONTROLLERS_STATUS = "com.micewine.emu.ACTION_UPDATE_CONTROLLERS_STATUS";
+    private static final String PREF_VIRTUAL_CONTROLLER_MODE = "virtual_controller_mode";
+
+    private boolean getVirtualControllerMode() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("ControllerSettings", Context.MODE_PRIVATE);
+        return prefs.getBoolean(PREF_VIRTUAL_CONTROLLER_MODE, false);
+    }
+
+    private void putVirtualControllerMode(boolean isWinexinput) {
+        SharedPreferences prefs = requireContext().getSharedPreferences("ControllerSettings", Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(PREF_VIRTUAL_CONTROLLER_MODE, isWinexinput).apply();
+    }
 }
