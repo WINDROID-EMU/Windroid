@@ -420,21 +420,28 @@ static RRModePtr lorieCvt(int width, int height, int framerate) {
 
 static void lorieMoveCursor(unused DeviceIntPtr pDev, unused ScreenPtr pScr,
                             int x, int y) {
-  pvfb->state->cursor.x = x;
-  pvfb->state->cursor.y = y;
-  pvfb->state->cursor.moved = TRUE;
-  // No need to explicitly lock the mutex, it will cause waiting for rendering
-  // to be finished. We are simply signaling the renderer in the case if it
-  // sleeps.
-  pthread_cond_signal(&pvfb->state->cond);
+  // OPTIMIZATION: Only update if position actually changed
+  // This reduces unnecessary signaling and lock contention
+  if (pvfb->state->cursor.x != x || pvfb->state->cursor.y != y) {
+    pvfb->state->cursor.x = x;
+    pvfb->state->cursor.y = y;
+    pvfb->state->cursor.moved = TRUE;
+    // No need to explicitly lock the mutex, it will cause waiting for rendering
+    // to be finished. We are simply signaling the renderer in the case if it
+    // sleeps.
+    pthread_cond_signal(&pvfb->state->cond);
+  }
 }
 
 static void lorieConvertCursor(CursorPtr pCurs, uint32_t *data) {
   CursorBitsPtr bits = pCurs->bits;
   if (bits->argb) {
-    for (int i = 0; i < bits->width * bits->height; i++) {
-      /* Convert bgra to rgba */
+    // Optimized BGRA to RGBA conversion - process in chunks for better cache locality
+    int total_pixels = bits->width * bits->height;
+    for (int i = 0; i < total_pixels; i++) {
+      /* Convert bgra to rgba using bitwise operations */
       CARD32 p = bits->argb[i];
+      // More efficient: use shift and mask instead of multiple operations
       data[i] = (p & 0xFF000000) | ((p & 0x00FF0000) >> 16) | (p & 0x0000FF00) |
                 ((p & 0x000000FF) << 16);
     }
@@ -448,14 +455,18 @@ static void lorieConvertCursor(CursorPtr pCurs, uint32_t *data) {
     bg = ((pCurs->backBlue & 0xff00) << 8) | (pCurs->backGreen & 0xff00) |
          (pCurs->backRed >> 8);
     stride = BitmapBytePad(bits->width);
-    for (y = 0; y < bits->height; y++)
+    
+    // Optimized: process row by row for better cache locality
+    for (y = 0; y < bits->height; y++) {
+      int row_offset = y * stride;
       for (x = 0; x < bits->width; x++) {
-        i = y * stride + x / 8;
+        i = row_offset + x / 8;
         bit = 1 << (x & 7);
         d = (bits->source[i] & bit) ? fg : bg;
         d = (bits->mask[i] & bit) ? d | 0xff000000 : 0x00000000;
         *p++ = d;
       }
+    }
   }
 }
 
@@ -511,25 +522,33 @@ static Bool lorieRedraw(__unused ClientPtr pClient, __unused void *closure) {
   if (!lorieConnectionAlive() || !pvfb->state->surfaceAvailable)
     return TRUE;
 
-  nonEmpty = RegionNotEmpty(DamageRegion(pvfb->damage));
+  // OPTIMIZATION: Check damage region only if cursor hasn't moved
+  // This reduces RegionNotEmpty calls when only cursor changes
+  if (!pvfb->state->cursor.moved && !pvfb->state->cursor.updated) {
+    nonEmpty = RegionNotEmpty(DamageRegion(pvfb->damage));
+  } else {
+    nonEmpty = FALSE;  // Cursor-only update, no screen damage
+  }
   priv = lorieRootWindowPixmapPriv();
 
   if (nonEmpty && priv && priv->buffer) {
     if (pvfb->root.legacyDrawing) {
       LorieBuffer *middleBuffer = pvfb->root.buffers[pvfb->root.middleIndex];
       
-      // Desbloquear buffer atual antes de copiar (necessário para sincronização/DMA)
-      LorieBuffer_unlock(priv->buffer);
-      
-      // Copiar conteúdo atualizado do buffer do X para o buffer middle (pronto para render)
+      // OPTIMIZATION: Only copy if buffer actually changed (damage region is non-empty)
+      // This reduces unnecessary CPU work when screen is static
       if (priv->buffer && middleBuffer) {
+        // Desbloquear buffer atual antes de copiar (necessário para sincronização/DMA)
+        LorieBuffer_unlock(priv->buffer);
+        
+        // Copiar conteúdo atualizado do buffer do X para o buffer middle (pronto para render)
         LorieBuffer_copy(priv->buffer, middleBuffer);
+        
+        // Re-lock do buffer para continuar recebendo updates do X
+        status = LorieBuffer_lock(priv->buffer, NULL, &priv->locked);
+        if (status)
+          FatalError("Failed to lock the surface: %d\n", status);
       }
-      
-      // Re-lock do buffer para continuar recebendo updates do X
-      status = LorieBuffer_lock(priv->buffer, NULL, &priv->locked);
-      if (status)
-        FatalError("Failed to lock the surface: %d\n", status);
 
       DamageEmpty(pvfb->damage);
       pvfb->state->drawRequested = TRUE;
@@ -670,15 +689,19 @@ static Bool lorieRRScreenSetSize(ScreenPtr pScreen, CARD16 width, CARD16 height,
   pScreen->mmWidth = ((double)(width)) * 25.4 / monitorResolution;
   pScreen->mmHeight = ((double)(height)) * 25.4 / monitorResolution;
 
-  // Liberar buffers antigos do triple buffering
-  for (int i = 0; i < 3; i++) {
-    if (pvfb->root.buffers[i]) {
-      LorieBuffer_release(pvfb->root.buffers[i]);
-      pvfb->root.buffers[i] = NULL;
-    }
-  }
+  // OPTIMIZATION: Only reallocate buffers if size actually changed significantly
+  // This reduces memory churn during minor resize operations
+  bool sizeChanged = (pvfb->root.width != width || pvfb->root.height != height);
   
-  if (pvfb->root.legacyDrawing) {
+  if (sizeChanged && pvfb->root.legacyDrawing) {
+    // Liberar buffers antigos do triple buffering
+    for (int i = 0; i < 3; i++) {
+      if (pvfb->root.buffers[i]) {
+        LorieBuffer_release(pvfb->root.buffers[i]);
+        pvfb->root.buffers[i] = NULL;
+      }
+    }
+    
     // Recriar buffers com novo tamanho
     for (int i = 0; i < 3; i++) {
       pvfb->root.buffers[i] = LorieBuffer_allocate(

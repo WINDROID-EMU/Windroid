@@ -815,10 +815,6 @@ public class MainActivity extends AppCompatActivity {
             }).start();
         }
 
-        if (preferences.getBoolean(SELINUX_PERMISSIVE_ROOT, false)) {
-            RootUtils.applySelinuxPermissive();
-        }
-
         installDXWrapper(winePrefix);
         setupUserLinks(winePrefix);
 
@@ -891,6 +887,10 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         runningXServer = true;
+
+        if (preferences.getBoolean(SELINUX_PERMISSIVE_ROOT, false)) {
+            RootUtils.applySelinuxPermissive();
+        }
 
         RootUtils.mountTmpfs();
 

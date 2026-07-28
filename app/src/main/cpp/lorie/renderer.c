@@ -117,12 +117,12 @@ static const char vertex_shader[] = "attribute vec4 position;\n"
 
 #define COLOR_PROFILE_FRAGMENT_LOGIC                                           \
     "   if (colorProfile == 1) { // Vivid\n"                                     \
-    "       lowp vec3 grayscale = vec3(dot(color.rgb, vec3(0.299, 0.587, 0.114)));\n" \
-    "       color.rgb = mix(grayscale, color.rgb, 1.35);\n"                      \
+    "       lowp float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));\n"   \
+    "       color.rgb = mix(vec3(gray), color.rgb, 1.25);\n"                     \
     "   } else if (colorProfile == 2) { // Warm\n"                                \
-    "       color.rgb *= vec3(1.15, 1.05, 0.85);\n"                              \
+    "       color.rgb *= vec3(1.10, 1.02, 0.90);\n"                              \
     "   } else if (colorProfile == 3) { // Cool\n"                                \
-    "       color.rgb *= vec3(0.85, 1.05, 1.15);\n"                              \
+    "       color.rgb *= vec3(0.90, 1.02, 1.10);\n"                              \
     "   }\n"
 
 #define FRAGMENT_SHADER(swizzle)                                               \
@@ -151,7 +151,7 @@ static const char fragment_shader_bgra[] = FRAGMENT_SHADER(".bgra");
     "    lowp vec3 d = texture2D(texture, outTexCoords + vec2(-srcSize.x, 0.0)).rgb;\n" \
     "    lowp vec3 f = texture2D(texture, outTexCoords + vec2(srcSize.x, 0.0)).rgb;\n" \
     "    lowp vec3 h = texture2D(texture, outTexCoords + vec2(0.0, srcSize.y)).rgb;\n" \
-    "    lowp vec3 res = e + (e - (b + d + f + h) * 0.25) * 0.5;\n"             \
+    "    lowp vec3 res = e + (e - (b + d + f + h) * 0.25) * 0.35;\n"            \
     "    lowp vec4 color = vec4(clamp(res, 0.0, 1.0), 1.0)" swizzle ";\n"         \
     COLOR_PROFILE_FRAGMENT_LOGIC                                                 \
     "    gl_FragColor = color;\n"                                                 \
@@ -172,7 +172,7 @@ static const char fsr_fragment_shader_bgra[] = FSR_FRAGMENT_SHADER(".bgra");
     "    lowp vec3 d = texture2D(texture, outTexCoords + vec2(-srcSize.x, 0.0)).rgb;\n" \
     "    lowp vec3 f = texture2D(texture, outTexCoords + vec2(srcSize.x, 0.0)).rgb;\n" \
     "    lowp vec3 h = texture2D(texture, outTexCoords + vec2(0.0, srcSize.y)).rgb;\n" \
-    "    lowp vec3 res = e + (e - (b + d + f + h) * 0.25) * 0.25;\n"            \
+    "    lowp vec3 res = e + (e - (b + d + f + h) * 0.25) * 0.18;\n"            \
     "    lowp vec4 color = vec4(clamp(res, 0.0, 1.0), 1.0)" swizzle ";\n"         \
     COLOR_PROFILE_FRAGMENT_LOGIC                                                 \
     "    gl_FragColor = color;\n"                                                 \
@@ -237,6 +237,7 @@ static struct {
 static GLuint local_display_id = 0;
 static GLuint quad_vbo = 0;  // Static VBO for the full-screen quad (never changes)
 static GLuint copy_fbo = 0;
+static GLuint dst_fbo = 0;  // Pooled destination FBO for blit operations
 static uint32_t local_display_width = 0;
 static uint32_t local_display_height = 0;
 
@@ -260,7 +261,8 @@ static struct {
   double avgFrameTimeMs;
   double lastFrameTimeMs;
   struct timespec lastFrameTime;
-} perf = {0, 0, 0, 0, 0.0, 0.0, {0, 0}};
+  int gpuLoadLevel;  // 0=low, 1=medium, 2=high
+} perf = {0, 0, 0, 0, 0.0, 0.0, {0, 0}, 0};
 static int gles_version = 0;
 static GLuint pbo = 0;
 
@@ -333,6 +335,15 @@ static void updatePerfCounters(void) {
     perf.lastFrameTimeMs = frameTimeMs;
     // Média móvel exponencial
     perf.avgFrameTimeMs = perf.avgFrameTimeMs * 0.9 + frameTimeMs * 0.1;
+    
+    // Adaptive GPU load detection
+    if (perf.avgFrameTimeMs > 16.67) {  // Below 60fps
+      perf.gpuLoadLevel = 2;  // High load
+    } else if (perf.avgFrameTimeMs > 11.0) {  // Below 90fps
+      perf.gpuLoadLevel = 1;  // Medium load
+    } else {
+      perf.gpuLoadLevel = 0;  // Low load
+    }
   }
   perf.lastFrameTime = now;
   perf.framesRendered++;
@@ -1054,19 +1065,19 @@ void renderer_redraw_locked(JNIEnv *env) {
     if (!copy_fbo) {
       glGenFramebuffers(1, &copy_fbo);
     }
+    if (!dst_fbo) {
+      glGenFramebuffers(1, &dst_fbo);  // Create once, reuse forever
+    }
 
 #if defined(GL_ES_VERSION_3_0)
     if (gles_version >= 3) {
       /* glBlitFramebuffer is a direct GPU-to-GPU blit — much faster than
        * glCopyTexSubImage2D which reads back through the framebuffer. */
-      GLuint dst_fbo = 0;
-      glGenFramebuffers(1, &dst_fbo);
-
       // Source: display.id
       glBindFramebuffer(GL_READ_FRAMEBUFFER, copy_fbo);
       glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, display.id, 0);
 
-      // Destination: local_display_id
+      // Destination: local_display_id (reusing pooled dst_fbo)
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dst_fbo);
       glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, local_display_id, 0);
 
@@ -1075,7 +1086,6 @@ void renderer_redraw_locked(JNIEnv *env) {
                         GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glDeleteFramebuffers(1, &dst_fbo);
     } else
 #endif
     {
@@ -1103,7 +1113,13 @@ void renderer_redraw_locked(JNIEnv *env) {
 
   GLuint active_tex_id = (display.desc.data || !local_display_id) ? display.id : local_display_id;
 
-  if (frame_generation == 1 && last_frame.id && last_frame.width == win_width && last_frame.height == win_height) {
+  // Skip frame generation if not needed or if GPU is under high load
+  bool use_frame_generation = (frame_generation == 1 && last_frame.id && 
+                               last_frame.width == win_width && last_frame.height == win_height &&
+                               !state->cursor.updated && !state->cursor.moved &&
+                               perf.gpuLoadLevel < 2);  // Disable under high GPU load
+
+  if (use_frame_generation) {
     // Draw interpolated frame (50% previous, 50% current)
     draw(active_tex_id, -1.f, -1.f, 1.f, 1.f,
          display.desc.format != AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM, 0.5f);
@@ -1160,11 +1176,16 @@ void renderer_redraw_locked(JNIEnv *env) {
   }
 
   state->cursor.moved = FALSE;
-  draw_cursor();
+  
+  // Only draw cursor if it's visible and has valid dimensions
+  if (state->cursor.width > 0 && state->cursor.height > 0) {
+    draw_cursor();
+  }
 
 
   // Copy current frame to last_frame for next iteration
-  if (frame_generation == 1) {
+  // OPTIMIZATION: Use GPU-to-GPU copy instead of expensive readback
+  if (frame_generation == 1 && use_frame_generation) {
     if (!last_frame.id || last_frame.width != win_width || last_frame.height != win_height) {
       if (last_frame.id) glDeleteTextures(1, &last_frame.id);
       glGenTextures(1, &last_frame.id);
@@ -1173,11 +1194,23 @@ void renderer_redraw_locked(JNIEnv *env) {
       last_frame.width = win_width;
       last_frame.height = win_height;
     }
-    /* Use glCopyTexSubImage2D from the default framebuffer (post-draw).
-     * This is the only valid path here since we read from the window surface,
-     * not from a texture-backed FBO. */
-    bindTexture(last_frame.id);
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, win_width, win_height);
+    
+    // Use GPU-to-GPU blit instead of readback when possible
+    if (gles_version >= 3 && copy_fbo && dst_fbo) {
+      // Source: default framebuffer (current rendered frame)
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);  // Default framebuffer
+      // Destination: last_frame texture via FBO
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dst_fbo);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_frame.id, 0);
+ glBlitFramebuffer(0, 0, win_width, win_height,
+                        0, 0, win_width, win_height,
+                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    } else {
+      // Fallback to readback (expensive but necessary for GLES 2)
+      bindTexture(last_frame.id);
+      glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, win_width, win_height);
+    }
   }
 
   // Wait until root window drawing is finished before giving control back to X
@@ -1220,10 +1253,10 @@ void renderer_redraw_locked(JNIEnv *env) {
   // Atualizar performance counters
   updatePerfCounters();
   
-  // Log de performance a cada 60 frames (~1 segundo a 60fps)
-  if ((perf.framesRendered % 60) == 0) {
-    log("Perf: avgFrameTime=%.2fms, cursorUploads=%lu, framesRendered=%lu",
-        perf.avgFrameTimeMs, (unsigned long)perf.cursorUploads, (unsigned long)perf.framesRendered);
+  // Log de performance reduzido - apenas a cada 300 frames (~5 segundos a 60fps)
+  if ((perf.framesRendered % 300) == 0) {
+    log("Perf: avg=%.2fms gpuLoad=%d cursor=%lu frames=%lu",
+        perf.avgFrameTimeMs, perf.gpuLoadLevel, (unsigned long)perf.cursorUploads, (unsigned long)perf.framesRendered);
   }
 }
 
@@ -1367,7 +1400,7 @@ static void draw(GLuint id, float x0, float y0, float x1, float y1,
       prog = g_interpolation_program;
       p = gv_pos_interp;
       c = gv_coords_interp;
-    } else if (scaling_filter == 1) {
+    } else if (scaling_filter == 1 && perf.gpuLoadLevel < 2) {  // Disable FSR under high GPU load
       if (flip && g_fsr_program_bgra) {
         prog = g_fsr_program_bgra;
         p = gv_pos_fsr_bgra;
@@ -1377,7 +1410,7 @@ static void draw(GLuint id, float x0, float y0, float x1, float y1,
         p = gv_pos_fsr;
         c = gv_coords_fsr;
       }
-    } else if (scaling_filter == 2) {
+    } else if (scaling_filter == 2 && perf.gpuLoadLevel < 2) {  // Disable CAS under high GPU load
       if (flip && g_cas_program_bgra) {
         prog = g_cas_program_bgra;
         p = gv_pos_cas_bgra;
