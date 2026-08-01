@@ -49,7 +49,7 @@ public class ControllerSettingsFragment extends DialogFragment {
     private List<TextView> controllersKeyboardPresetTexts;
     private List<TextView> controllersNamesTexts;
     private Spinner virtualControllerModeSpinner;
-    private final List<String> mappingTypes = List.of("MiceWine Controller", "Keyboard/Mouse");
+    private final List<String> mappingTypes = List.of("Windroid Controller", "Keyboard/Mouse");
     private final List<String> controllerProfilesNames =
             getControllerPresets().stream()
                     .map(ControllerPreset::getName)

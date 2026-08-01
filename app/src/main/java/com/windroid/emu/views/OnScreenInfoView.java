@@ -5,7 +5,7 @@ import static com.windroid.emu.activities.MainActivity.enableCpuCounter;
 import static com.windroid.emu.activities.MainActivity.enableDebugInfo;
 import static com.windroid.emu.activities.MainActivity.enableRamCounter;
 import static com.windroid.emu.activities.MainActivity.memoryStats;
-import static com.windroid.emu.activities.MainActivity.miceWineVersion;
+import static com.windroid.emu.activities.MainActivity.windroidVersion;
 import static com.windroid.emu.activities.MainActivity.selectedD3DXRenderer;
 import static com.windroid.emu.activities.MainActivity.selectedDXVK;
 import static com.windroid.emu.activities.MainActivity.selectedVKD3D;
@@ -116,7 +116,7 @@ public class OnScreenInfoView extends View {
         float lineHeight = paint.getTextSize() + 10F;
         float currentY = lineHeight;
 
-        drawText(miceWineVersion, getTextEndX(canvas, miceWineVersion), currentY, canvas);
+        drawText(windroidVersion, getTextEndX(canvas, windroidVersion), currentY, canvas);
         currentY += lineHeight;
 
         drawText(vkd3dVersion, getTextEndX(canvas, vkd3dVersion), currentY, canvas);

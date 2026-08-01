@@ -7,7 +7,7 @@ public class ShellLoader {
     private static final StringBuilder sessionLogs = new StringBuilder();
 
     static {
-        System.loadLibrary("micewine");
+        System.loadLibrary("windroid");
     }
 
     public interface LogCallback {

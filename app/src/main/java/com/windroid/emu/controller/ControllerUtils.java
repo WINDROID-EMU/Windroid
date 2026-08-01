@@ -623,7 +623,7 @@ public class ControllerUtils {
     public final static int SELECT_BUTTON = 0x02;
 
     static {
-        System.loadLibrary("micewine");
+        System.loadLibrary("windroid");
     }
 
     @FastNative

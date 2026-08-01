@@ -236,6 +236,6 @@ public class EnvVars {
 
         // Virtual controller mode (HID or WINEXINPUT)
         boolean useWinexinputMode = preferences.getBoolean("virtual_controller_mode", false);
-        vars.add("MICEWINE_CONTROLLER_MODE=" + (useWinexinputMode ? "WINEXINPUT" : "HID"));
+        vars.add("WINDROID_CONTROLLER_MODE=" + (useWinexinputMode ? "WINEXINPUT" : "HID"));
     }
 }

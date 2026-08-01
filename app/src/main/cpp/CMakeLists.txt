@@ -82,5 +82,5 @@ foreach(project xorgproto fontenc md pixman tirpc xshmfence Xdmcp Xau Xfont2 xkb
     include(recipes/${project}.cmake)
 endforeach()
 
-add_library(micewine SHARED micewine/shell_loader.c micewine/controller.c)
-target_link_libraries(micewine PUBLIC android log)
+add_library(windroid SHARED micewine/shell_loader.c micewine/controller.c)
+target_link_libraries(windroid PUBLIC android log)

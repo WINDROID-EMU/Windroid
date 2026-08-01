@@ -429,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case ACTION_SETUP -> new Thread(() -> {
                     new SetupFragment().show(getSupportFragmentManager(), "");
-                    setupMiceWine();
+                    setupWindroid();
                 }).start();
                 case ACTION_INSTALL_RAT -> {
                     if (!(ratCandidate.getArchitecture().equals(deviceArch)
@@ -908,7 +908,7 @@ public class MainActivity extends AppCompatActivity {
         return getApplicationInfo().nativeLibraryDir;
     }
 
-    private void setupMiceWine() {
+    private void setupWindroid() {
         appRootDir.mkdirs();
         ratPackagesDir.mkdirs();
 
@@ -1117,7 +1117,7 @@ public class MainActivity extends AppCompatActivity {
     public static String fileManagerCwd = null;
     public static String floatingFileManagerCwd = null;
     public static String selectedFilePath = "";
-    public static String miceWineVersion = "Windroid " + BuildConfig.VERSION_NAME
+    public static String windroidVersion = "Windroid " + BuildConfig.VERSION_NAME
             + (BuildConfig.DEBUG ? " (git-" + BuildConfig.GIT_SHORT_SHA + ")" : "");
     public static String vulkanDriverDeviceName = null;
     public static String vulkanDriverDriverVersion = null;

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VirtualControllerSettingsFragment extends DialogFragment {
-    private final List<String> mappingTypes = List.of("MiceWine Controller", "Keyboard/Mouse");
+    private final List<String> mappingTypes = List.of("Windroid Controller", "Keyboard/Mouse");
     private List<String> virtualControllerProfilesNames;
 
     @NonNull

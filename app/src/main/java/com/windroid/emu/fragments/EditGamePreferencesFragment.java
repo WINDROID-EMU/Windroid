@@ -173,7 +173,7 @@ public class EditGamePreferencesFragment extends DialogFragment {
     public static RecyclerView recyclerViewEnvVars;
     private MaterialButton addEnvVarButton;
     public static final ArrayList<AdapterEnvVar.EnvVar> envVars = new ArrayList<>();
-    private final List<String> mappingTypes = List.of("MiceWine Controller", "Keyboard/Mouse");
+    private final List<String> mappingTypes = List.of("Windroid Controller", "Keyboard/Mouse");
     private List<String> virtualControllerProfilesNames;
     private final List<String> controllerProfilesNames = getControllerPresets().stream()
             .map(ControllerPresetManagerFragment.ControllerPreset::getName)
