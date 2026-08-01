@@ -1,7 +1,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/MiceWine.CardView"
+    style="@style/Windroid.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -59,7 +59,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/optionSwitch"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:padding="16dp"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"

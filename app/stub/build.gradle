@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.micewine.emu.stub'
+    namespace 'com.windroid.emu.stub'
     compileSdk 34
 
     defaultConfig {

@@ -7,7 +7,7 @@
     android:gravity="bottom"
     android:orientation="vertical"
     android:windowLayoutInDisplayCutoutMode="shortEdges"
-    android:theme="@style/Theme.MiceWine">
+    android:theme="@style/Theme.Windroid">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:theme="@style/Theme.MiceWine"
+        android:theme="@style/Theme.Windroid"
         app:labelVisibilityMode="selected"
         app:menu="@menu/bottom_nav_menu">
     </com.google.android.material.bottomnavigation.BottomNavigationView>

@@ -32,41 +32,41 @@
         android:allowAudioPlaybackCapture="true">
         <activity
             android:name=".activities.WelcomeActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:configChanges="keyboard|keyboardHidden|navigation|touchscreen"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.PresetManagerActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:configChanges="keyboard|keyboardHidden|navigation|touchscreen"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.GeneralSettingsActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.ControllerTestActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.VirtualControllerOverlayMapper"
-            android:theme="@style/Theme.MiceWine.FullScreen"
+            android:theme="@style/Theme.Windroid.FullScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.RatManagerActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:configChanges="keyboard|keyboardHidden|navigation|touchscreen"
             android:exported="false">
         </activity>
         <activity
             android:name=".activities.RatDownloaderActivity"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:configChanges="keyboard|keyboardHidden|navigation|touchscreen"
             android:exported="false">
         </activity>
@@ -75,7 +75,7 @@
             android:configChanges="fontScale|orientation|screenSize|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|screenLayout|touchscreen|uiMode|smallestScreenSize|density"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MiceWine">
+            android:theme="@style/Theme.Windroid">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -103,7 +103,7 @@
             android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:taskAffinity=".EmulationActivity"
-            android:theme="@style/Theme.MiceWine.FullScreen"
+            android:theme="@style/Theme.Windroid.FullScreen"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <service

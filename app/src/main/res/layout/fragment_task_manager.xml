@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/menu_bg"
     android:orientation="vertical"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:padding="12dp">
 
     <TextView

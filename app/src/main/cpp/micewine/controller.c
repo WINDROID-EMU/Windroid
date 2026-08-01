@@ -192,19 +192,19 @@ void *controller_update_thread(__unused void *param) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_setEnableXInputNative(
+Java_com_windroid_emu_controller_ControllerUtils_setEnableXInputNative(
     __unused JNIEnv *env, __unused jobject cls, jboolean enabled) {
   enableXInput = enabled;
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_setEnableDInputNative(
+Java_com_windroid_emu_controller_ControllerUtils_setEnableDInputNative(
     __unused JNIEnv *env, __unused jobject cls, jboolean enabled) {
   enableDInput = enabled;
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_startInputServer(
+Java_com_windroid_emu_controller_ControllerUtils_startInputServer(
     __unused JNIEnv *env, __unused jobject cls) {
   if (inputServerRunning)
     return;
@@ -214,7 +214,7 @@ Java_com_micewine_emu_controller_ControllerUtils_startInputServer(
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_stopInputServer(
+Java_com_windroid_emu_controller_ControllerUtils_stopInputServer(
     __unused JNIEnv *env, __unused jobject cls) {
   inputServerRunning = false;
   pthread_kill(controller_thread_id, SIGUSR2);
@@ -222,7 +222,7 @@ Java_com_micewine_emu_controller_ControllerUtils_stopInputServer(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_connectController(
+Java_com_windroid_emu_controller_ControllerUtils_connectController(
     __unused JNIEnv *env, __unused jobject cls) {
   for (int i = 0; i < 4; i++) {
     if (!connectedVirtualControllers[i].isConnected) {
@@ -236,7 +236,7 @@ Java_com_micewine_emu_controller_ControllerUtils_connectController(
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_disconnectController(
+Java_com_windroid_emu_controller_ControllerUtils_disconnectController(
     __unused JNIEnv *env, __unused jobject cls, jint index) {
   if (index == -1 || index > 3)
     return;
@@ -245,7 +245,7 @@ Java_com_micewine_emu_controller_ControllerUtils_disconnectController(
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_updateButtonsStateNative(
+Java_com_windroid_emu_controller_ControllerUtils_updateButtonsStateNative(
     __unused JNIEnv *env, __unused jobject cls, jint index, jint buttons,
     jint buttonsB) {
   if (index == -1 || index > 3)
@@ -278,7 +278,7 @@ static inline uint8_t float_to_u8_255(float f) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_updateAxisStateNative(
+Java_com_windroid_emu_controller_ControllerUtils_updateAxisStateNative(
     __unused JNIEnv *env, jobject __unused cls, jint index, jfloat lx,
     jfloat ly, jfloat rx, jfloat ry, jfloat lt, jfloat rt, jbyte dpadStatus) {
   if (index == -1 || index > 3)
@@ -293,7 +293,7 @@ Java_com_micewine_emu_controller_ControllerUtils_updateAxisStateNative(
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_setVibrationEnabled(
+Java_com_windroid_emu_controller_ControllerUtils_setVibrationEnabled(
     __unused JNIEnv *env, __unused jobject cls, jboolean enabled) {
   vibrationEnabled = enabled;
   if (!enabled) {
@@ -316,7 +316,7 @@ Java_com_micewine_emu_controller_ControllerUtils_setVibrationEnabled(
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_controller_ControllerUtils_nativeInitVibration(
+Java_com_windroid_emu_controller_ControllerUtils_nativeInitVibration(
     JNIEnv *env, jobject cls) {
   (*env)->GetJavaVM(env, &jvm);
   controllerUtilsClass = (*env)->NewGlobalRef(env, cls);

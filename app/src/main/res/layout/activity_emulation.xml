@@ -13,37 +13,37 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
-        <com.micewine.emu.LorieView
+        <com.windroid.emu.LorieView
             android:id="@+id/lorieView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="visible">
-        </com.micewine.emu.LorieView>
+        </com.windroid.emu.LorieView>
 
-        <com.micewine.emu.views.OnScreenInfoView
+        <com.windroid.emu.views.OnScreenInfoView
             android:id="@+id/hwView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="visible">
-        </com.micewine.emu.views.OnScreenInfoView>
+        </com.windroid.emu.views.OnScreenInfoView>
 
-        <com.micewine.emu.views.VirtualKeyboardInputView
+        <com.windroid.emu.views.VirtualKeyboardInputView
             android:id="@+id/overlayView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="visible">
-        </com.micewine.emu.views.VirtualKeyboardInputView>
+        </com.windroid.emu.views.VirtualKeyboardInputView>
 
-        <com.micewine.emu.views.VirtualControllerInputView
+        <com.windroid.emu.views.VirtualControllerInputView
             android:id="@+id/xInputOverlayView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="visible">
-        </com.micewine.emu.views.VirtualControllerInputView>
+        </com.windroid.emu.views.VirtualControllerInputView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveLayout"

@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:theme="@style/Theme.MiceWine"
+            android:theme="@style/Theme.Windroid"
             android:visibility="gone">
         </ProgressBar>
 

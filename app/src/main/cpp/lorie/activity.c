@@ -139,10 +139,10 @@ static void nativeInit(JNIEnv *env, jobject thiz) {
                                           "()Ljava/lang/String;", JNI_FALSE);
 
     EmulationActivity.self =
-        FindClassOrDie(env, "com/micewine/emu/activities/EmulationActivity");
+        FindClassOrDie(env, "com/windroid/emu/activities/EmulationActivity");
     EmulationActivity.getInstance = FindMethodOrDie(
         env, EmulationActivity.self, "getInstance",
-        "()Lcom/micewine/emu/activities/EmulationActivity;", JNI_TRUE);
+        "()Lcom/windroid/emu/activities/EmulationActivity;", JNI_TRUE);
     EmulationActivity.clientConnectedStateChanged =
         FindMethodOrDie(env, EmulationActivity.self,
                         "clientConnectedStateChanged", "()V", JNI_FALSE);
@@ -472,7 +472,7 @@ static void setVsync(__unused JNIEnv *env, __unused jobject thiz, jint vsync) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_micewine_emu_LorieView_renderingInActivity(JNIEnv *env, jobject thiz) {
+Java_com_windroid_emu_LorieView_renderingInActivity(JNIEnv *env, jobject thiz) {
   return RENDERER_IN_ACTIVITY;
 }
 
@@ -501,7 +501,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
       {"setVsync", "(I)V", (void *)&setVsync},
   };
   (*vm)->AttachCurrentThread(vm, &env, NULL);
-  jclass cls = (*env)->FindClass(env, "com/micewine/emu/LorieView");
+  jclass cls = (*env)->FindClass(env, "com/windroid/emu/LorieView");
   (*env)->RegisterNatives(env, cls, methods,
                           sizeof(methods) / sizeof(methods[0]));
 
@@ -534,6 +534,6 @@ static void *stderrToLogcatThread(__unused void *cookie) {
 extern char *__progname;
 __attribute__((constructor)) static void init(void) {
   pthread_t t;
-  if (!strcmp(__progname, "com.micewine.emu"))
+  if (!strcmp(__progname, "com.windroid.emu"))
     pthread_create(&t, NULL, stderrToLogcatThread, NULL);
 }

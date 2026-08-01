@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/menu_bg"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -25,7 +25,7 @@
             android:textIsSelectable="true"
             android:maxLines="10000"
             android:background="@drawable/top_rounded_shape"
-            android:theme="@style/Theme.MiceWine">
+            android:theme="@style/Theme.Windroid">
         </TextView>
 
     </ScrollView>

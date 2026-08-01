@@ -1520,11 +1520,11 @@ __unused static void draw_cursor(void) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_LorieView_setColorProfile(JNIEnv *env, jobject thiz, jint profile) {
+Java_com_windroid_emu_LorieView_setColorProfile(JNIEnv *env, jobject thiz, jint profile) {
   renderer_set_color_profile(profile);
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_LorieView_setFrameSkip(JNIEnv *env, jobject thiz, jint skip) {
+Java_com_windroid_emu_LorieView_setFrameSkip(JNIEnv *env, jobject thiz, jint skip) {
   renderer_set_frameskip(skip);
 }

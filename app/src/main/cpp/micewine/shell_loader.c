@@ -108,7 +108,7 @@ void appendLog(JNIEnv *env, const char *text) {
   }
 
   if (addToSessionLogsMethodID != NULL) {
-    jclass cls = (*env)->FindClass(env, "com/micewine/emu/core/ShellLoader");
+    jclass cls = (*env)->FindClass(env, "com/windroid/emu/core/ShellLoader");
     jstring jText = (*env)->NewStringUTF(env, text);
     (*env)->CallStaticVoidMethod(env, cls, addToSessionLogsMethodID, jText);
     (*env)->DeleteLocalRef(env, jText);
@@ -116,7 +116,7 @@ void appendLog(JNIEnv *env, const char *text) {
   }
 }
 
-JNIEXPORT void JNICALL Java_com_micewine_emu_core_ShellLoader_connectOutput(
+JNIEXPORT void JNICALL Java_com_windroid_emu_core_ShellLoader_connectOutput(
     JNIEnv *env, jobject __unused cls, jobject callback) {
   if (callbackInstance != NULL) {
     (*env)->DeleteGlobalRef(env, callbackInstance);
@@ -127,14 +127,14 @@ JNIEXPORT void JNICALL Java_com_micewine_emu_core_ShellLoader_connectOutput(
   appendLogsMethodID =
       (*env)->GetMethodID(env, class, "appendLogs", "(Ljava/lang/String;)V");
 
-  jclass shellLoaderCls = (*env)->FindClass(env, "com/micewine/emu/core/ShellLoader");
+  jclass shellLoaderCls = (*env)->FindClass(env, "com/windroid/emu/core/ShellLoader");
   addToSessionLogsMethodID = (*env)->GetStaticMethodID(env, shellLoaderCls, "addToSessionLogs", "(Ljava/lang/String;)V");
 
   (*env)->DeleteLocalRef(env, shellLoaderCls);
   (*env)->DeleteLocalRef(env, cls);
 }
 
-JNIEXPORT void JNICALL Java_com_micewine_emu_core_ShellLoader_cleanup(
+JNIEXPORT void JNICALL Java_com_windroid_emu_core_ShellLoader_cleanup(
     JNIEnv *env, __unused jobject cls) {
   if (callbackInstance != NULL) {
     (*env)->DeleteGlobalRef(env, callbackInstance);
@@ -144,7 +144,7 @@ JNIEXPORT void JNICALL Java_com_micewine_emu_core_ShellLoader_cleanup(
   appendLogsMethodID = NULL;
 }
 
-JNIEXPORT jint JNICALL Java_com_micewine_emu_core_ShellLoader_runCommand(
+JNIEXPORT jint JNICALL Java_com_windroid_emu_core_ShellLoader_runCommand(
     JNIEnv *env, __unused jobject cls, jstring command, jboolean log) {
   const char *parsedCommand;
   int pipe_in[2];
@@ -233,7 +233,7 @@ JNIEXPORT jint JNICALL Java_com_micewine_emu_core_ShellLoader_runCommand(
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_micewine_emu_core_ShellLoader_runCommandWithOutput(
+Java_com_windroid_emu_core_ShellLoader_runCommandWithOutput(
     JNIEnv *env, __unused jobject cls, jstring command, jboolean stdErrLog) {
   const char *parsedCommand;
   int pipe_in[2];

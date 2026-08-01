@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     tools:context=".activities.RatManagerActivity">
 
     <LinearLayout

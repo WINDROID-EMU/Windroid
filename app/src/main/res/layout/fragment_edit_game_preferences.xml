@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:theme="@style/Theme.MiceWine">
+        android:theme="@style/Theme.Windroid">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -297,7 +297,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
-                android:theme="@style/Theme.MiceWine" />
+                android:theme="@style/Theme.Windroid" />
 
             <TextView
                 android:layout_marginTop="16dp"
@@ -320,7 +320,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/wineESync"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
@@ -339,7 +339,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/wineServices"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
@@ -358,7 +358,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/enableWineVirtualDesktop"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
@@ -442,7 +442,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller0SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -521,7 +521,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller1SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -600,7 +600,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller2SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -680,7 +680,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller3SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -785,7 +785,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/enableXInput"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
@@ -804,7 +804,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/enableDInput"
-                android:theme="@style/Theme.MiceWine"
+                android:theme="@style/Theme.Windroid"
                 android:gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"

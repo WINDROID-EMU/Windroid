@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/menu_bg"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:padding="16dp"
     android:orientation="vertical">
 
@@ -78,7 +78,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller0SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -157,7 +157,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller1SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -236,7 +236,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller2SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"
@@ -316,7 +316,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/controller3SwapAnalogsSwitch"
-                    android:theme="@style/Theme.MiceWine"
+                    android:theme="@style/Theme.Windroid"
                     android:gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:layout_width="wrap_content"

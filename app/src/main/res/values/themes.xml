@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Base.Theme.MiceWine" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+    <style name="Base.Theme.Windroid" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/darker_gray</item>
         <item name="android:colorBackground">#FFFFFF</item>
         <item name="colorSurface">#FFFFFF</item>
@@ -11,7 +11,7 @@
 
     <color name="textColor">#000000</color>
 
-    <style name="Base.Theme.MiceWine.FullScreen" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+    <style name="Base.Theme.Windroid.FullScreen" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/darker_gray</item>
         <item name="android:colorBackground">#FFFFFF</item>
         <item name="colorSurface">#FFFFFF</item>
@@ -27,7 +27,7 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
-    <style name="Theme.MiceWine" parent="Base.Theme.MiceWine" />
-    <style name="Theme.MiceWine.FullScreen" parent="Base.Theme.MiceWine.FullScreen" />
+    <style name="Theme.Windroid" parent="Base.Theme.Windroid" />
+    <style name="Theme.Windroid.FullScreen" parent="Base.Theme.Windroid.FullScreen" />
 
 </resources>

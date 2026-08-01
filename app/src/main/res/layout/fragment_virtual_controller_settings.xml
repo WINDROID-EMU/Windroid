@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/menu_bg"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:padding="16dp"
     android:orientation="vertical">
 

@@ -7,7 +7,7 @@
     android:background="@drawable/menu_bg"
     android:orientation="vertical"
     android:padding="16dp"
-    android:theme="@style/Theme.MiceWine">
+    android:theme="@style/Theme.Windroid">
 
     <TextView
         android:id="@+id/envDialogTitle"

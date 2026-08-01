@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/menu_bg"
     android:orientation="vertical"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:padding="16dp">
 
     <LinearLayout

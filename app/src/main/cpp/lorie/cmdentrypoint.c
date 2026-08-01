@@ -44,7 +44,7 @@ static void* startServer(__unused void* cookie) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_micewine_emu_CmdEntryPoint_start(JNIEnv *env, __unused jclass cls, jobjectArray args) {
+Java_com_windroid_emu_CmdEntryPoint_start(JNIEnv *env, __unused jclass cls, jobjectArray args) {
     pthread_t t;
     JavaVM* vm = NULL;
     // execv's argv array is a bit incompatible with Java's String[], so we do some converting here...
@@ -79,7 +79,7 @@ Java_com_micewine_emu_CmdEntryPoint_start(JNIEnv *env, __unused jclass cls, jobj
         execlp("logcat", "logcat", "--pid", pid, NULL);
     }
 
-    setenv("TMPDIR", "/data/data/com.micewine.emu/files/usr/tmp", 1);
+    setenv("TMPDIR", "/data/data/com.windroid.emu/files/usr/tmp", 1);
 
     if (!getenv("TMPDIR")) {
         char* error = (char*) "$TMPDIR is not set. Normally it is pointing to /tmp of a container.";
@@ -129,8 +129,8 @@ Java_com_micewine_emu_CmdEntryPoint_start(JNIEnv *env, __unused jclass cls, jobj
     }
 
     if (!getenv("XKB_CONFIG_ROOT")) {
-        if (access("/data/data/com.micewine.emu/files/usr/share/X11/xkb", F_OK) == 0)
-            setenv("XKB_CONFIG_ROOT", "/data/data/com.micewine.emu/files/usr/share/X11/xkb", 1);
+        if (access("/data/data/com.windroid.emu/files/usr/share/X11/xkb", F_OK) == 0)
+            setenv("XKB_CONFIG_ROOT", "/data/data/com.windroid.emu/files/usr/share/X11/xkb", 1);
     }
 
     if (!getenv("XKB_CONFIG_ROOT")) {
@@ -158,14 +158,14 @@ Java_com_micewine_emu_CmdEntryPoint_start(JNIEnv *env, __unused jclass cls, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_CmdEntryPoint_windowChanged(JNIEnv *env, __unused jobject cls, jobject surface) {
+Java_com_windroid_emu_CmdEntryPoint_windowChanged(JNIEnv *env, __unused jobject cls, jobject surface) {
 #if !RENDERER_IN_ACTIVITY
     renderer_set_window(env, surface ? (*env)->NewGlobalRef(env, surface) : NULL);
 #endif
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_micewine_emu_CmdEntryPoint_getSurface(JNIEnv *env, __unused jobject cls) {
+Java_com_windroid_emu_CmdEntryPoint_getSurface(JNIEnv *env, __unused jobject cls) {
 #if !RENDERER_IN_ACTIVITY
     extern jobject renderer_get_surface(void);
     return renderer_get_surface();
@@ -403,7 +403,7 @@ void lorieSendRootWindowBuffer(LorieBuffer* buffer) {
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_micewine_emu_CmdEntryPoint_getXConnection(JNIEnv *env, __unused jobject cls) {
+Java_com_windroid_emu_CmdEntryPoint_getXConnection(JNIEnv *env, __unused jobject cls) {
     int client[2];
     jclass ParcelFileDescriptorClass = (*env)->FindClass(env, "android/os/ParcelFileDescriptor");
     jmethodID adoptFd = (*env)->GetStaticMethodID(env, ParcelFileDescriptorClass, "adoptFd", "(I)Landroid/os/ParcelFileDescriptor;");
@@ -424,7 +424,7 @@ void* logcatThread(void *arg) {
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_micewine_emu_CmdEntryPoint_getLogcatOutput(JNIEnv *env, __unused jobject cls) {
+Java_com_windroid_emu_CmdEntryPoint_getLogcatOutput(JNIEnv *env, __unused jobject cls) {
     jclass ParcelFileDescriptorClass = (*env)->FindClass(env, "android/os/ParcelFileDescriptor");
     jmethodID adoptFd = (*env)->GetStaticMethodID(env, ParcelFileDescriptorClass, "adoptFd", "(I)Landroid/os/ParcelFileDescriptor;");
     const char *debug = getenv("TERMUX_X11_DEBUG");
@@ -440,12 +440,12 @@ Java_com_micewine_emu_CmdEntryPoint_getLogcatOutput(JNIEnv *env, __unused jobjec
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_micewine_emu_CmdEntryPoint_connected(__unused JNIEnv *env, __unused jclass clazz) {
+Java_com_windroid_emu_CmdEntryPoint_connected(__unused JNIEnv *env, __unused jclass clazz) {
     return conn_fd != -1;
 }
 
 JNIEXPORT void JNICALL
-Java_com_micewine_emu_CmdEntryPoint_listenForConnections(JNIEnv *env, jobject thiz) {
+Java_com_windroid_emu_CmdEntryPoint_listenForConnections(JNIEnv *env, jobject thiz) {
     int server_fd, client, count;
     struct sockaddr_in address = { .sin_family = AF_INET, .sin_addr = { .s_addr = INADDR_ANY }, .sin_port = htons(PORT) };
     int addrlen = sizeof(address);

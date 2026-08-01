@@ -8,15 +8,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:theme="@style/Theme.MiceWine"
+    android:theme="@style/Theme.Windroid"
     android:background="@color/darker_gray"
     tools:context=".activities.VirtualControllerOverlayMapper">
 
-    <com.micewine.emu.views.VirtualKeyboardInputCreatorView
+    <com.windroid.emu.views.VirtualKeyboardInputCreatorView
         android:id="@+id/overlayView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.micewine.emu.views.VirtualKeyboardInputCreatorView>
+    </com.windroid.emu.views.VirtualKeyboardInputCreatorView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"

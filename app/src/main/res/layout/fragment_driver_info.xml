@@ -47,7 +47,7 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textIsSelectable="true"
-                android:theme="@style/Theme.MiceWine">
+                android:theme="@style/Theme.Windroid">
             </TextView>
 
         </ScrollView>
