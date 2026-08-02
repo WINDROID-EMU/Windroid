@@ -15,7 +15,7 @@ import com.windroid.emu.adapters.AdapterSettings.SettingsList;
 
 import java.util.ArrayList;
 
-public class GeneralSettingsFragment extends Fragment {
+public class DriverSettingsContainerFragment extends Fragment {
     private final ArrayList<SettingsList> settingsList = new ArrayList<>();
     private RecyclerView recyclerView;
 
@@ -35,6 +35,10 @@ public class GeneralSettingsFragment extends Fragment {
         recyclerView.setAdapter(new AdapterSettings(settingsList, requireContext()));
 
         settingsList.clear();
+
+        addToAdapter(R.string.driver_settings_title, R.string.driver_settings_desc, R.drawable.ic_gpu);
+        addToAdapter(R.string.driver_info_title, R.string.driver_info_desc, R.drawable.ic_gpu);
+        addToAdapter(R.string.graphic_engine_settings_title, R.string.graphic_engine_settings_desc, R.drawable.ic_settings_outline);
     }
 
     private void addToAdapter(int titleId, int descriptionId, int iconId) {

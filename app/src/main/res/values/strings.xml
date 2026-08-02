@@ -70,6 +70,10 @@
     <string name="display_settings_desc">Configure Display</string>
     <string name="driver_settings_title">Drivers Settings</string>
     <string name="driver_settings_desc">Configure GPU Drivers</string>
+    <string name="driver_settings_container_title">Driver Settings</string>
+    <string name="driver_settings_container_desc">Configure GPU Drivers and Graphics Engine</string>
+    <string name="package_manager_title">Package Manager</string>
+    <string name="package_manager_desc">Manage RAT Packages and Downloads</string>
     <string name="env_settings_title">Environment Settings</string>
     <string name="env_settings_desc">Modify Environment Variables</string>
     <string name="env_add_action">Add Environment Variable</string>
@@ -77,6 +81,7 @@
     <string name="env_key">Name</string>
     <string name="env_value">Value</string>
     <string name="shortcuts_title">Shortcuts</string>
+    <string name="shortcuts_desc">Manage your game shortcuts</string>
     <string name="stretch_display">Stretch Display</string>
     <string name="display_resolution_title">Display Resolution</string>
     <string name="display_resolution_desc">Change Virtual Display Resolution</string>
@@ -91,6 +96,8 @@
     <string name="select_wined3d_desc">Select WineD3D Version</string>
     <string name="select_dxvk_hud_preset_title">Select DXVK HUD Preset</string>
     <string name="select_dxvk_hud_preset_desc">Select DXVK HUD Preset for more or less information</string>
+    <string name="controller_settings_title">Controllers</string>
+    <string name="controller_settings_desc">Manage Controller Settings</string>
     <string name="controller_mapper_title">Controller Mapper</string>
     <string name="controller_mapper_desc">Configure your Gamepad</string>
     <string name="no_controllers_connected">No Controllers Connected.</string>
@@ -188,6 +195,10 @@
     <string name="wine_manager_desc">Manage Wine Versions</string>
     <string name="wine_prefix_manager_title">Wine Prefix Manager</string>
     <string name="wine_prefix_manager_desc">Manage Wine Prefixes</string>
+    <string name="wine_unified_settings_title">Wine Settings</string>
+    <string name="wine_unified_settings_desc">Prefixes, Wine settings and Winetricks in one place</string>
+    <string name="wine_tab_prefixes_title">Prefixes</string>
+    <string name="wine_tab_settings_title">Settings</string>
     <string name="installing_drivers">Installing Drivers…</string>
     <string name="installing_box64">Installing Box64…</string>
     <string name="installing_wine">Installing Wine…</string>
@@ -322,4 +333,6 @@
     <string name="wine_frameskip_desc">Pula quadros no driver de vídeo para máxima economia de CPU/GPU (recomendado)</string>
     <string name="enable_vibration">Enable Game Vibration</string>
     <string name="enable_vibration_desc">Allow phone to vibrate based on in-game actions</string>
+    <string name="clear_all_shortcuts">Clear All Shortcuts</string>
+    <string name="clear_all_shortcuts_desc">Apagar todos atalhos</string>
 </resources>

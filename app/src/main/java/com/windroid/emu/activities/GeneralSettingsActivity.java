@@ -27,6 +27,8 @@ import com.windroid.emu.fragments.Box64SettingsFragment;
 import com.windroid.emu.fragments.DebugSettingsFragment;
 import com.windroid.emu.fragments.DriverInfoFragment;
 import com.windroid.emu.fragments.DriversSettingsFragment;
+import com.windroid.emu.fragments.DriverSettingsContainerFragment;
+import com.windroid.emu.fragments.PackageManagerContainerFragment;
 import com.windroid.emu.fragments.EnvVarsSettingsFragment;
 import com.windroid.emu.fragments.GeneralSettingsFragment;
 import com.windroid.emu.fragments.SoundSettingsFragment;
@@ -36,10 +38,15 @@ import com.windroid.emu.fragments.GraphicEngineSettingsFragment;
 
 public class GeneralSettingsActivity extends AppCompatActivity {
     private Toolbar generalSettingsToolbar;
+    private boolean openedDirectly = false;
+    private String initialPreference = null;
+    private boolean isAtContainerLevel = false;
     private final Box64SettingsFragment box64SettingsFragment = new Box64SettingsFragment();
     private final DebugSettingsFragment debugSettingsFragment = new DebugSettingsFragment();
     private final DriverInfoFragment driverInfoFragment = new DriverInfoFragment();
     private final DriversSettingsFragment driversSettingsFragment = new DriversSettingsFragment();
+    private final DriverSettingsContainerFragment driverSettingsContainerFragment = new DriverSettingsContainerFragment();
+    private final PackageManagerContainerFragment packageManagerContainerFragment = new PackageManagerContainerFragment();
     private final EnvVarsSettingsFragment envVarsSettingsFragment = new EnvVarsSettingsFragment();
     private final SoundSettingsFragment soundSettingsFragment = new SoundSettingsFragment();
     private final WineSettingsFragment wineSettingsFragment = new WineSettingsFragment();
@@ -59,6 +66,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
                     fragmentLoader(box64SettingsFragment, false);
                 } else if (preference.equals(getString(R.string.debug_settings_title))) {
                     fragmentLoader(debugSettingsFragment, false);
+                } else if (preference.equals(getString(R.string.driver_settings_container_title))) {
+                    fragmentLoader(driverSettingsContainerFragment, false);
+                } else if (preference.equals(getString(R.string.package_manager_title))) {
+                    fragmentLoader(packageManagerContainerFragment, false);
                 } else if (preference.equals(getString(R.string.driver_settings_title))) {
                     fragmentLoader(driversSettingsFragment, false);
                 } else if (preference.equals(getString(R.string.driver_info_title))) {
@@ -73,13 +84,6 @@ public class GeneralSettingsActivity extends AppCompatActivity {
                     fragmentLoader(graphicEngineSettingsFragment, false);
                 } else if (preference.equals(getString(R.string.winetricks_title))) {
                     fragmentLoader(winetricksFragment, false);
-                } else if (preference.equals(getString(R.string.scan_games_title))) {
-                    String startPath = com.windroid.emu.activities.MainActivity.wineDisksFolder != null
-                            ? com.windroid.emu.activities.MainActivity.wineDisksFolder.getPath()
-                            : "/storage/emulated/0";
-                    new com.windroid.emu.fragments.FloatingFileManagerFragment(
-                            com.windroid.emu.fragments.FloatingFileManagerFragment.OPERATION_SELECT_FOLDER, startPath)
-                            .show(getSupportFragmentManager(), "");
                 }
             }
         }
@@ -223,6 +227,37 @@ public class GeneralSettingsActivity extends AppCompatActivity {
 
         androidx.core.content.ContextCompat.registerReceiver(this, receiver, new IntentFilter(ACTION_PREFERENCE_SELECT),
                 androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED);
+
+        // Handle direct navigation to driver settings container
+        String preference = getIntent().getStringExtra("preference");
+        if (preference != null && preference.equals(getString(R.string.driver_settings_container_title))) {
+            openedDirectly = true;
+            initialPreference = getString(R.string.driver_settings_container_title);
+            isAtContainerLevel = true;
+            generalSettingsToolbar.setTitle(preference);
+            fragmentLoader(driverSettingsContainerFragment, true); // Add to backstack
+        } else if (preference != null && preference.equals(getString(R.string.package_manager_title))) {
+            openedDirectly = true;
+            initialPreference = getString(R.string.package_manager_title);
+            isAtContainerLevel = true;
+            generalSettingsToolbar.setTitle(preference);
+            fragmentLoader(packageManagerContainerFragment, true); // Add to backstack
+        } else if (preference != null && preference.equals(getString(R.string.debug_settings_title))) {
+            openedDirectly = true;
+            initialPreference = getString(R.string.debug_settings_title);
+            generalSettingsToolbar.setTitle(preference);
+            fragmentLoader(debugSettingsFragment, false); // Don't add to backstack
+        } else if (preference != null && preference.equals(getString(R.string.sound_settings_title))) {
+            openedDirectly = true;
+            initialPreference = getString(R.string.sound_settings_title);
+            generalSettingsToolbar.setTitle(preference);
+            fragmentLoader(soundSettingsFragment, false); // Don't add to backstack
+        } else if (preference != null && preference.equals(getString(R.string.env_settings_title))) {
+            openedDirectly = true;
+            initialPreference = getString(R.string.env_settings_title);
+            generalSettingsToolbar.setTitle(preference);
+            fragmentLoader(envVarsSettingsFragment, false); // Don't add to backstack
+        }
     }
 
     @Override
@@ -235,10 +270,30 @@ public class GeneralSettingsActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+            if (backStackCount > 0) {
                 getSupportFragmentManager().popBackStack();
-                generalSettingsToolbar.setTitle(R.string.general_settings);
+                // After popping, check the new back stack count
+                int newBackStackCount = getSupportFragmentManager().getBackStackEntryCount();
+                if (newBackStackCount == 0) {
+                    // No more back stack entries
+                    if (openedDirectly) {
+                        // We were opened directly, finish the activity
+                        finish();
+                    } else {
+                        // Normal navigation, show general settings
+                        generalSettingsToolbar.setTitle(R.string.general_settings);
+                    }
+                } else if (openedDirectly && isAtContainerLevel && newBackStackCount == 1) {
+                    // We're back at the container level (one entry left in backstack)
+                    if (initialPreference != null) {
+                        generalSettingsToolbar.setTitle(initialPreference);
+                    }
+                } else if (!openedDirectly) {
+                    generalSettingsToolbar.setTitle(R.string.general_settings);
+                }
             } else {
+                // No more back stack entries, finish the activity
                 finish();
             }
         }

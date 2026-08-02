@@ -45,13 +45,18 @@
     <string name="display_settings_desc">Configurar Display</string>
     <string name="driver_settings_title">Configurações de Drivers</string>
     <string name="driver_settings_desc">Configurar Drivers de GPU</string>
+    <string name="driver_settings_container_title">Configurações de driver</string>
+    <string name="driver_settings_container_desc">Configurar Drivers de GPU e Motor Gráfico</string>
+    <string name="package_manager_title">Gerenciador de pacotes</string>
+    <string name="package_manager_desc">Gerenciar Pacotes RAT e Downloads</string>
     <string name="env_settings_title">Configurações de Ambiente</string>
     <string name="env_settings_desc">Modificar Variaveis de Ambiente.</string>
     <string name="env_add_action">Adicionar Variavel de Ambiente</string>
     <string name="env_edit_action">Editar Variavel de Ambiente.</string>
     <string name="env_key">Nome</string>
     <string name="env_value">Valor</string>
-    <string name="shortcuts_title">Games</string>
+    <string name="shortcuts_title">Atalhos</string>
+    <string name="shortcuts_desc">Gerencie seus atalhos de jogos</string>
     <string name="box64_settings_title">Configurações do Box64</string>
     <string name="box64_settings_desc">Configurar Box64</string>
 
@@ -69,6 +74,8 @@
     <string name="select_wined3d_desc">Selecionar Versão do WineD3D</string>
     <string name="select_dxvk_hud_preset_title">Selecionar Preset do DXVK HUD</string>
     <string name="select_dxvk_hud_preset_desc">Selecionar Preset do DXVK HUD para mais ou menos informação</string>
+    <string name="controller_settings_title">Controles</string>
+    <string name="controller_settings_desc">Gerenciar Configurações de Controles</string>
     <string name="controller_mapper_title">Mapeador de Controle</string>
     <string name="no_controllers_connected">Nenhum Controle Conectado.</string>
     <string name="controller_mapper_desc">Configure seu Controle</string>
@@ -165,6 +172,10 @@
     <string name="wine_manager_desc">Gerenciar Versões do Wine</string>
     <string name="wine_prefix_manager_title">Gerenciador de Prefixos Wine</string>
     <string name="wine_prefix_manager_desc">Gerenciar Prefixos Wine</string>
+    <string name="wine_unified_settings_title">Configurações do Wine</string>
+    <string name="wine_unified_settings_desc">Prefixos, configurações do Wine e Winetricks em um só lugar</string>
+    <string name="wine_tab_prefixes_title">Prefixos</string>
+    <string name="wine_tab_settings_title">Configurações</string>
     <string name="installing_drivers">Instalando Drivers…</string>
     <string name="installing_box64">Instalando Box64…</string>
     <string name="installing_wine">Instalando Wine…</string>
@@ -268,4 +279,6 @@
     </plurals>
     <string name="enable_vibration">Ativar Vibração do Jogo</string>
     <string name="enable_vibration_desc">Permite o celular vibrar de acordo com ações no jogo</string>
+    <string name="clear_all_shortcuts">Limpar Todos os Atalhos</string>
+    <string name="clear_all_shortcuts_desc">Apagar todos atalhos</string>
 </resources>

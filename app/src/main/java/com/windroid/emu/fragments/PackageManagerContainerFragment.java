@@ -15,7 +15,7 @@ import com.windroid.emu.adapters.AdapterSettings.SettingsList;
 
 import java.util.ArrayList;
 
-public class GeneralSettingsFragment extends Fragment {
+public class PackageManagerContainerFragment extends Fragment {
     private final ArrayList<SettingsList> settingsList = new ArrayList<>();
     private RecyclerView recyclerView;
 
@@ -35,6 +35,9 @@ public class GeneralSettingsFragment extends Fragment {
         recyclerView.setAdapter(new AdapterSettings(settingsList, requireContext()));
 
         settingsList.clear();
+
+        addToAdapter(R.string.rat_manager_title, R.string.rat_manager_desc, R.drawable.ic_rat_package_grayscale);
+        addToAdapter(R.string.rat_downloader_title, R.string.rat_downloader_desc, R.drawable.ic_download);
     }
 
     private void addToAdapter(int titleId, int descriptionId, int iconId) {

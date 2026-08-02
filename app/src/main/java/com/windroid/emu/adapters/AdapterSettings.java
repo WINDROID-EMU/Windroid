@@ -15,14 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.windroid.emu.R;
+import com.windroid.emu.activities.ControllerCategoryActivity;
 import com.windroid.emu.activities.ControllerTestActivity;
 import com.windroid.emu.activities.GeneralSettingsActivity;
+import com.windroid.emu.activities.MainActivity;
 import com.windroid.emu.activities.PresetManagerActivity;
 import com.windroid.emu.activities.RatDownloaderActivity;
 import com.windroid.emu.activities.RatManagerActivity;
+import com.windroid.emu.activities.WineSettingsActivity;
+import com.windroid.emu.fragments.FloatingFileManagerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +79,9 @@ public class AdapterSettings extends RecyclerView.Adapter<AdapterSettings.ViewHo
             if (item.titleSettings.equals(context.getString(R.string.general_settings))) {
                 Intent intent = new Intent(context, GeneralSettingsActivity.class);
                 context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.controller_settings_title))) {
+                Intent intent = new Intent(context, ControllerCategoryActivity.class);
+                context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.controller_mapper_title))) {
                 Intent intent = new Intent(context, PresetManagerActivity.class);
                 intent.putExtra("presetType", CONTROLLER_PRESET);
@@ -90,6 +98,9 @@ public class AdapterSettings extends RecyclerView.Adapter<AdapterSettings.ViewHo
                 Intent intent = new Intent(context, PresetManagerActivity.class);
                 intent.putExtra("presetType", WINE_PREFIX_PRESET);
                 context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.wine_unified_settings_title))) {
+                Intent intent = new Intent(context, WineSettingsActivity.class);
+                context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.rat_manager_title))) {
                 Intent intent = new Intent(context, RatManagerActivity.class);
                 context.startActivity(intent);
@@ -98,6 +109,32 @@ public class AdapterSettings extends RecyclerView.Adapter<AdapterSettings.ViewHo
                 context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.controller_view_title))) {
                 Intent intent = new Intent(context, ControllerTestActivity.class);
+                context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.scan_games_title))) {
+                String startPath = MainActivity.wineDisksFolder != null
+                        ? MainActivity.wineDisksFolder.getPath()
+                        : "/storage/emulated/0";
+                new FloatingFileManagerFragment(FloatingFileManagerFragment.OPERATION_SELECT_FOLDER, startPath)
+                        .show(((FragmentActivity) context).getSupportFragmentManager(), "");
+            } else if (item.titleSettings.equals(context.getString(R.string.driver_settings_container_title))) {
+                Intent intent = new Intent(context, GeneralSettingsActivity.class);
+                intent.putExtra("preference", context.getString(R.string.driver_settings_container_title));
+                context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.package_manager_title))) {
+                Intent intent = new Intent(context, GeneralSettingsActivity.class);
+                intent.putExtra("preference", context.getString(R.string.package_manager_title));
+                context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.debug_settings_title))) {
+                Intent intent = new Intent(context, GeneralSettingsActivity.class);
+                intent.putExtra("preference", context.getString(R.string.debug_settings_title));
+                context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.sound_settings_title))) {
+                Intent intent = new Intent(context, GeneralSettingsActivity.class);
+                intent.putExtra("preference", context.getString(R.string.sound_settings_title));
+                context.startActivity(intent);
+            } else if (item.titleSettings.equals(context.getString(R.string.env_settings_title))) {
+                Intent intent = new Intent(context, GeneralSettingsActivity.class);
+                intent.putExtra("preference", context.getString(R.string.env_settings_title));
                 context.startActivity(intent);
             } else {
                 Intent intent = new Intent(ACTION_PREFERENCE_SELECT);

@@ -38,19 +38,19 @@ public class SettingsFragment extends Fragment {
 
         settingsList.clear();
 
-        addToAdapter(R.string.general_settings, R.string.settings_desc, R.drawable.ic_settings_outline);
-        addToAdapter(R.string.controller_mapper_title, R.string.controller_mapper_desc, R.drawable.ic_joystick);
-        addToAdapter(R.string.virtual_controller_mapper_title, R.string.controller_virtual_mapper_desc,
-                R.drawable.ic_joystick);
+        addToAdapter(R.string.controller_settings_title, R.string.controller_settings_desc, R.drawable.ic_joystick);
+        addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc, R.drawable.ic_settings_outline);
 
         if (!deviceArch.equals("x86_64")) {
             addToAdapter(R.string.box64_preset_manager_title, R.string.box64_preset_manager_desc, R.drawable.ic_box64);
         }
 
-        addToAdapter(R.string.wine_prefix_manager_title, R.string.wine_prefix_manager_desc, R.drawable.ic_wine);
-        addToAdapter(R.string.rat_manager_title, R.string.rat_manager_desc, R.drawable.ic_rat_package_grayscale);
-        addToAdapter(R.string.rat_downloader_title, R.string.rat_downloader_desc, R.drawable.ic_download);
-        addToAdapter(R.string.controller_view_title, R.string.controller_view_desc, R.drawable.ic_joystick);
+        addToAdapter(R.string.wine_unified_settings_title, R.string.wine_unified_settings_desc, R.drawable.ic_wine);
+        addToAdapter(R.string.driver_settings_container_title, R.string.driver_settings_container_desc, R.drawable.ic_gpu);
+        addToAdapter(R.string.package_manager_title, R.string.package_manager_desc, R.drawable.ic_rat_package_grayscale);
+        addToAdapter(R.string.sound_settings_title, R.string.sound_settings_desc, R.drawable.ic_sound);
+        addToAdapter(R.string.env_settings_title, R.string.env_settings_desc, R.drawable.ic_globe);
+        addToAdapter(R.string.scan_games_title, R.string.scan_games_desc, R.drawable.ic_folder);
     }
 
     private void addToAdapter(int titleId, int descriptionId, int iconId) {
