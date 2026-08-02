@@ -19,14 +19,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.windroid.emu.R;
-import com.windroid.emu.activities.ControllerCategoryActivity;
 import com.windroid.emu.activities.ControllerTestActivity;
 import com.windroid.emu.activities.GeneralSettingsActivity;
 import com.windroid.emu.activities.MainActivity;
 import com.windroid.emu.activities.PresetManagerActivity;
 import com.windroid.emu.activities.RatDownloaderActivity;
 import com.windroid.emu.activities.RatManagerActivity;
-import com.windroid.emu.activities.WineSettingsActivity;
 import com.windroid.emu.fragments.FloatingFileManagerFragment;
 
 import java.util.ArrayList;
@@ -80,8 +78,9 @@ public class AdapterSettings extends RecyclerView.Adapter<AdapterSettings.ViewHo
                 Intent intent = new Intent(context, GeneralSettingsActivity.class);
                 context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.controller_settings_title))) {
-                Intent intent = new Intent(context, ControllerCategoryActivity.class);
-                context.startActivity(intent);
+                // TODO: ControllerCategoryActivity not committed yet
+                // Intent intent = new Intent(context, ControllerCategoryActivity.class);
+                // context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.controller_mapper_title))) {
                 Intent intent = new Intent(context, PresetManagerActivity.class);
                 intent.putExtra("presetType", CONTROLLER_PRESET);
@@ -99,8 +98,9 @@ public class AdapterSettings extends RecyclerView.Adapter<AdapterSettings.ViewHo
                 intent.putExtra("presetType", WINE_PREFIX_PRESET);
                 context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.wine_unified_settings_title))) {
-                Intent intent = new Intent(context, WineSettingsActivity.class);
-                context.startActivity(intent);
+                // TODO: WineSettingsActivity not committed yet
+                // Intent intent = new Intent(context, WineSettingsActivity.class);
+                // context.startActivity(intent);
             } else if (item.titleSettings.equals(context.getString(R.string.rat_manager_title))) {
                 Intent intent = new Intent(context, RatManagerActivity.class);
                 context.startActivity(intent);
