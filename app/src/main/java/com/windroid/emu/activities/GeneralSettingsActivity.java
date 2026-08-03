@@ -245,18 +245,21 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         } else if (preference != null && preference.equals(getString(R.string.debug_settings_title))) {
             openedDirectly = true;
             initialPreference = getString(R.string.debug_settings_title);
+            isAtContainerLevel = true;
             generalSettingsToolbar.setTitle(preference);
-            fragmentLoader(debugSettingsFragment, false); // Don't add to backstack
+            fragmentLoader(debugSettingsFragment, true); // Add to backstack
         } else if (preference != null && preference.equals(getString(R.string.sound_settings_title))) {
             openedDirectly = true;
             initialPreference = getString(R.string.sound_settings_title);
+            isAtContainerLevel = true;
             generalSettingsToolbar.setTitle(preference);
-            fragmentLoader(soundSettingsFragment, false); // Don't add to backstack
+            fragmentLoader(soundSettingsFragment, true); // Add to backstack
         } else if (preference != null && preference.equals(getString(R.string.env_settings_title))) {
             openedDirectly = true;
             initialPreference = getString(R.string.env_settings_title);
+            isAtContainerLevel = true;
             generalSettingsToolbar.setTitle(preference);
-            fragmentLoader(envVarsSettingsFragment, false); // Don't add to backstack
+            fragmentLoader(envVarsSettingsFragment, true); // Add to backstack
         }
     }
 
