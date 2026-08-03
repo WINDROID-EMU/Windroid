@@ -261,16 +261,6 @@ public class EmulationActivity extends AppCompatActivity implements View.OnApply
             generateMangoHUDConfFile();
         });
 
-        MaterialSwitch stretchDisplaySwitch = headerViewMain.findViewById(R.id.stretchDisplaySwitch);
-        stretchDisplaySwitch.setChecked(preferences != null && preferences.getBoolean(DISPLAY_STRETCH, DISPLAY_STRETCH_DEFAULT_VALUE));
-        stretchDisplaySwitch.setOnClickListener((v) -> {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(DISPLAY_STRETCH, stretchDisplaySwitch.isChecked());
-            editor.apply();
-
-            getLorieView().requestLayout();
-        });
-
         MaterialSwitch openCloseVirtualControllerSwitch = headerViewMain
                 .findViewById(R.id.openCloseVirtualControllerSwitch);
         openCloseVirtualControllerSwitch.setOnClickListener((v) -> {

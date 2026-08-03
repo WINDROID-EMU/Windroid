@@ -29,4 +29,12 @@
         android:focusable="false"
         android:clickable="true" />
 
+    <ImageView
+        android:id="@+id/winetricksItemInstalledIcon"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_check_circle"
+        android:contentDescription="Package already installed" />
+
 </LinearLayout>

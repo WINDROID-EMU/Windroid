@@ -69,6 +69,8 @@
     <string name="select_wined3d_desc">选择 WineD3D 版本</string>
     <string name="select_dxvk_hud_preset_title">选择 DXVK HUD 预设</string>
     <string name="select_dxvk_hud_preset_desc">选择 DXVK HUD 的预设以显示更多或更少的信息</string>
+    <string name="controller_settings_title">控制器</string>
+    <string name="controller_settings_desc">管理控制器设置</string>
     <string name="controller_mapper_title">控制器映射器</string>
     <string name="no_controllers_connected">未连接任何控制器。</string>
     <string name="controller_mapper_desc">配置您的控制器</string>

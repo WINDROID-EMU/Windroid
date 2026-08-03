@@ -84,7 +84,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:text="@string/stretch_display"
+            android:text="@string/open_close_virtual_controller"
             android:textSize="15sp"
             android:textAlignment="textStart"
             android:textColor="@color/textColor"
@@ -92,19 +92,20 @@
             android:layout_weight="1"
             android:layout_height="55dp"
             style="@style/Widget.Material3.Button.TextButton"
-            app:icon="@drawable/ic_display"
+            app:icon="@drawable/ic_joystick"
             app:iconTint="@color/textColor"
             app:iconPadding="10dp"
             app:iconGravity="start">
         </com.google.android.material.button.MaterialButton>
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/stretchDisplaySwitch"
+            android:id="@+id/openCloseVirtualControllerSwitch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
         </com.google.android.material.materialswitch.MaterialSwitch>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -208,34 +209,6 @@
         app:iconPadding="10dp"
         app:iconGravity="start">
     </com.google.android.material.button.MaterialButton>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:text="@string/open_close_virtual_controller"
-            android:textSize="15sp"
-            android:textAlignment="textStart"
-            android:textColor="@color/textColor"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="55dp"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:icon="@drawable/ic_joystick"
-            app:iconTint="@color/textColor"
-            app:iconPadding="10dp"
-            app:iconGravity="start">
-        </com.google.android.material.button.MaterialButton>
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/openCloseVirtualControllerSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-        </com.google.android.material.materialswitch.MaterialSwitch>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

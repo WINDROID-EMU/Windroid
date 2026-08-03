@@ -66,6 +66,8 @@
     <string name="select_wined3d_desc">Выбрать версию WineD3D</string>
     <string name="select_dxvk_hud_preset_title">Выбрать пресет DXVK HUD</string>
     <string name="select_dxvk_hud_preset_desc">Выбрать пресет DXVK HUD для отображения большего или меньшего количества информации</string>
+    <string name="controller_settings_title">Контроллеры</string>
+    <string name="controller_settings_desc">Управление настройками контроллера</string>
     <string name="controller_mapper_title">Настройка контроллера</string>
     <string name="controller_mapper_desc">Настроить геймпад</string>
     <string name="no_controllers_connected">Контроллеры не подключены.</string>

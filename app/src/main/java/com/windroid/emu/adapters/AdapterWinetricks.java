@@ -40,36 +40,37 @@ public class AdapterWinetricks extends RecyclerView.Adapter<AdapterWinetricks.Vi
         WinetricksItem item = filteredList.get(position);
         holder.iconView.setImageResource(item.getIconResId());
         holder.nameText.setText(item.getSimpleName());
-        holder.checkBox.setChecked(item.isSelected());
-        
-        // Configura o estado visual baseado em instalado ou não
+
         if (item.isInstalled()) {
+            // Pacote já instalado: mostra a caixinha verde com o sinal de V confirmando,
+            // esconde o checkbox de seleção e bloqueia totalmente o clique no item.
             holder.itemView.setAlpha(0.6f);
-            holder.checkBox.setEnabled(false);
-            holder.checkBox.setChecked(true);
+            holder.checkBox.setVisibility(View.GONE);
+            holder.installedIcon.setVisibility(View.VISIBLE);
+
+            holder.itemView.setClickable(false);
+            holder.itemView.setOnClickListener(null);
+            holder.checkBox.setOnClickListener(null);
         } else {
+            // Pacote ainda não instalado/validado: continua acessível e selecionável normalmente.
             holder.itemView.setAlpha(1.0f);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.installedIcon.setVisibility(View.GONE);
             holder.checkBox.setEnabled(true);
             holder.checkBox.setChecked(item.isSelected());
+
+            holder.itemView.setClickable(true);
+            holder.itemView.setOnClickListener(v -> {
+                boolean newState = !item.isSelected();
+                item.setSelected(newState);
+                holder.checkBox.setChecked(newState);
+            });
+
+            holder.checkBox.setOnClickListener(v -> {
+                boolean newState = holder.checkBox.isChecked();
+                item.setSelected(newState);
+            });
         }
-        
-        // Click listener no itemView inteiro
-        holder.itemView.setOnClickListener(v -> {
-            if (item.isInstalled()) return;
-            boolean newState = !item.isSelected();
-            item.setSelected(newState);
-            holder.checkBox.setChecked(newState);
-        });
-        
-        // Também permite clicar diretamente no checkbox
-        holder.checkBox.setOnClickListener(v -> {
-            if (item.isInstalled()) {
-                holder.checkBox.setChecked(true);
-                return;
-            }
-            boolean newState = holder.checkBox.isChecked();
-            item.setSelected(newState);
-        });
     }
 
     @Override
@@ -104,12 +105,14 @@ public class AdapterWinetricks extends RecyclerView.Adapter<AdapterWinetricks.Vi
         ImageView iconView;
         TextView nameText;
         CheckBox checkBox;
+        ImageView installedIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             iconView = itemView.findViewById(R.id.winetricksItemIcon);
             nameText = itemView.findViewById(R.id.winetricksItemName);
             checkBox = itemView.findViewById(R.id.winetricksItemCheckBox);
+            installedIcon = itemView.findViewById(R.id.winetricksItemInstalledIcon);
         }
     }
 }

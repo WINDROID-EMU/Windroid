@@ -48,6 +48,17 @@
             android:exported="false">
         </activity>
         <activity
+            android:name=".activities.WineSettingsActivity"
+            android:theme="@style/Theme.Windroid"
+            android:configChanges="keyboard|keyboardHidden|navigation|touchscreen"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activities.ControllerCategoryActivity"
+            android:theme="@style/Theme.Windroid"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".activities.ControllerTestActivity"
             android:theme="@style/Theme.Windroid"
             android:exported="false">

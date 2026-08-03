@@ -75,6 +75,7 @@ public class ShortcutsFragment extends Fragment {
     private TextView appName;
     private ImageButton searchItem;
     private ImageButton backButton;
+    private ImageButton clearAllShortcuts;
     private TextInputEditText searchInput;
     private ItemTouchHelper itemTouchHelper;
     private InputMethodManager immManager;
@@ -89,6 +90,7 @@ public class ShortcutsFragment extends Fragment {
         appName = rootView.findViewById(R.id.appName);
         searchItem = rootView.findViewById(R.id.searchItem);
         backButton = rootView.findViewById(R.id.backButton);
+        clearAllShortcuts = rootView.findViewById(R.id.clearAllShortcuts);
         searchInput = rootView.findViewById(R.id.searchInput);
         immManager = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);
 
@@ -139,6 +141,17 @@ public class ShortcutsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
             }
+        });
+
+        clearAllShortcuts.setOnClickListener((v) -> {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.clear_all_shortcuts)
+                    .setMessage(R.string.clear_all_shortcuts_desc)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        clearAllShortcuts(requireContext());
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
         });
 
         setupDragAndDrop();
@@ -924,6 +937,27 @@ public class ShortcutsFragment extends Fragment {
         if (adapter != null) {
             adapter.filterList("");
         }
+    }
+
+    public static void clearAllShortcuts(Context context) {
+        if (gameList.isEmpty())
+            return;
+
+        String defaultShortcutName = context.getString(R.string.desktop_mode_init);
+        
+        gameList.removeIf(gameItem -> !gameItem.name.equals(defaultShortcutName));
+
+        saveShortcuts();
+
+        if (recyclerView == null)
+            return;
+
+        recyclerView.post(() -> {
+            AdapterGame adapter = (AdapterGame) recyclerView.getAdapter();
+            if (adapter != null) {
+                adapter.filterList("");
+            }
+        });
     }
 
     public static void setGameName(String name, String newName) {
