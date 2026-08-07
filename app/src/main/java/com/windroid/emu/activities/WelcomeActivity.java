@@ -45,7 +45,9 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (DOWNLOAD_DONE.equals(intent.getAction())) {
-                runOnUiThread(() -> button.setVisibility(View.VISIBLE));
+                rootFSIsDownloaded = true;
+                finishedWelcomeScreen = true;
+                finish();
             } else if (DOWNLOAD_FAILED.equals(intent.getAction())) {
                 runOnUiThread(() -> button.setVisibility(View.VISIBLE));
             } else if (DOWNLOAD_START.equals(intent.getAction())) {
