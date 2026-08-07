@@ -158,7 +158,14 @@ public class RootUtils {
         
         Log.i(TAG, "Mounting tmpfs for esync...");
         runCommand("su -c 'mkdir -p /data/data/com.windroid.emu/files/usr/tmp'", false);
-        runCommand("su -c 'mount -t tmpfs -o size=256M,mode=1777,context=u:object_r:app_data_file:s0:c77,c257,c512,c768 tmpfs /data/data/com.windroid.emu/files/usr/tmp'", false);
+        
+        // Try mounting without SELinux context first (most compatible)
+        runCommand("su -c 'mount -t tmpfs -o size=256M,mode=1777 tmpfs /data/data/com.windroid.emu/files/usr/tmp'", false);
+        
+        // If that failed, try with generic SELinux context as fallback
+        if (!isTmpfsMounted()) {
+            runCommand("su -c 'mount -t tmpfs -o size=256M,mode=1777,context=u:object_r:app_data_file:s0 tmpfs /data/data/com.windroid.emu/files/usr/tmp'", false);
+        }
 
         if (isTmpfsMounted()) {
             Log.i(TAG, "tmpfs successfully mounted in RAM.");

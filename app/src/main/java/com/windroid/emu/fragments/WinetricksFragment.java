@@ -32,9 +32,15 @@ import com.windroid.emu.core.WinetricksWrapper;
 import static com.windroid.emu.activities.MainActivity.winePrefixesDir;
 import static com.windroid.emu.activities.MainActivity.winePrefix;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,13 +95,32 @@ public class WinetricksFragment extends Fragment implements ShellLoader.LogCallb
                 args.append(item.getName()).append(" ");
             }
 
-            runWinetricks(args.toString().trim());
+            runWinetricks(args.toString().trim(), selected);
         });
 
-        btnOpenLogViewer.setOnClickListener(v -> requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.settings_content, new LogViewerFragment())
-                .addToBackStack(null)
-                .commit());
+        btnOpenLogViewer.setOnClickListener(v -> {
+            if (requireActivity() instanceof com.windroid.emu.activities.GeneralSettingsActivity) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.settings_content, new LogViewerFragment())
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                // For WineSettingsActivity (ViewPager2 context), show log viewer in a dialog
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+                builder.setTitle("Winetricks Logs");
+                
+                android.widget.ScrollView scrollView = new android.widget.ScrollView(requireContext());
+                android.widget.TextView textView = new android.widget.TextView(requireContext());
+                textView.setText(ShellLoader.getSessionLogs());
+                textView.setPadding(16, 16, 16, 16);
+                textView.setTypeface(android.graphics.Typeface.MONOSPACE);
+                scrollView.addView(textView);
+                
+                builder.setView(scrollView);
+                builder.setPositiveButton("Close", null);
+                builder.show();
+            }
+        });
 
         btnRefreshList.setOnClickListener(v -> {
             WinetricksCache.clearCache(requireContext());
@@ -197,23 +222,41 @@ public class WinetricksFragment extends Fragment implements ShellLoader.LogCallb
     }
 
     private void checkInstalledPackages() {
-        // Verifica quais pacotes já estão instalados no prefixo atual
+        // Lê o winetricks.log do prefixo UMA única vez e monta um Set em memória.
+        // Antes, isPackageInstalled() disparava um comando de shell nativo (cat | grep)
+        // para CADA pacote da lista — e o "winetricks list-all" tem centenas de itens,
+        // então isso significava centenas de processos nativos sequenciais só para
+        // marcar os "V" de instalado. Lendo o arquivo direto pelo Java uma única vez
+        // e checando cada item contra o Set em memória, o custo cai de "centenas de
+        // spawns de processo" para uma leitura de arquivo + comparações O(1).
+        Set<String> installedNames = readInstalledLog();
+
         for (WinetricksItem item : packageList) {
-            boolean installed = isPackageInstalled(item.getName());
-            item.setInstalled(installed);
+            item.setInstalled(installedNames.contains(item.getName()));
         }
     }
 
-    private boolean isPackageInstalled(String packageName) {
-        // Verifica se o pacote está instalado verificando o winetricks.log
-        String prefix = winePrefixesDir + "/" + winePrefix;
-        String command = "cat " + prefix + "/winetricks.log 2>/dev/null | grep '^" + packageName + "$'";
-        String output = ShellLoader.runCommandWithOutput(command, false);
-        return output != null && output.trim().equals(packageName);
+    private Set<String> readInstalledLog() {
+        Set<String> installed = new HashSet<>();
+        File logFile = new File(winePrefixesDir, winePrefix + "/winetricks.log");
+
+        if (!logFile.exists()) return installed;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) installed.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return installed;
     }
 
     @SuppressLint("SetTextI18n")
-    private void runWinetricks(String args) {
+    private void runWinetricks(String args, List<WinetricksItem> selectedItems) {
         setRunningState(true);
         winetricksStatusText.setText("Executing Winetricks...");
         winetricksProgressBar.setIndeterminate(true);
@@ -226,6 +269,20 @@ public class WinetricksFragment extends Fragment implements ShellLoader.LogCallb
                 setRunningState(false);
                 if (result == 0) {
                     Toast.makeText(getContext(), "Winetricks Finished successfully", Toast.LENGTH_LONG).show();
+
+                    // Assim que termina, já revalida quem ficou instalado e marca o "V"
+                    // na hora — igual ao comportamento dos pacotes rat — em vez de exigir
+                    // que o usuário aperte "Atualizar lista" ou reabra a tela.
+                    new Thread(() -> {
+                        checkInstalledPackages();
+
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            for (WinetricksItem item : selectedItems) {
+                                item.setSelected(false);
+                            }
+                            adapter.updateList();
+                        });
+                    }).start();
                 } else {
                     Toast.makeText(getContext(), "Winetricks Failed (Exit code: " + result + ")", Toast.LENGTH_LONG).show();
                 }
