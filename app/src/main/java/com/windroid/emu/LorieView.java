@@ -66,7 +66,6 @@ public class LorieView extends SurfaceView implements InputStub {
     private final Point p = new Point();
     private final SurfaceHolder.Callback mSurfaceCallback = new SurfaceHolder.Callback() {
         @Override public void surfaceCreated(@NonNull SurfaceHolder holder) {
-            holder.setFormat(PixelFormat.BGRA_8888);
         }
 
         @Override public void surfaceChanged(@NonNull SurfaceHolder holder, int f, int width, int height) {
@@ -97,6 +96,7 @@ public class LorieView extends SurfaceView implements InputStub {
     public LorieView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) { super(context, attrs, defStyleAttr, defStyleRes); init(); }
 
     private void init() {
+        getHolder().setFormat(PixelFormat.BGRA_8888);
         getHolder().addCallback(mSurfaceCallback);
         clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         nativeInit();
@@ -108,11 +108,6 @@ public class LorieView extends SurfaceView implements InputStub {
     }
 
     public void regenerate() {
-        Callback callback = mCallback;
-        mCallback = null;
-        getHolder().setFormat(android.graphics.PixelFormat.RGBA_8888);
-        mCallback = callback;
-
         triggerCallback();
     }
 

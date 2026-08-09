@@ -30,6 +30,10 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_MESA_
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_MESA_VK_WSI_PRESENT_MODE_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_DEBUG_PRESET;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_DEBUG_PRESET_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TEXTURE_LOD_BIAS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VULKAN_DRIVER;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_SCALING_FILTER;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_FRAME_GENERATION;
@@ -1093,6 +1097,8 @@ public class MainActivity extends AppCompatActivity {
     public static String selectedDXVKHud = null;
     public static String selectedMesaVkWsiPresentMode = null;
     public static String selectedTuDebugPreset = null;
+    public static String selectedTuTextureLodBias = null;
+    public static String selectedTuForceMipLevel = null;
     public static String selectedVramLimit = null;
     public static String selectedScalingFilter = null;
     public static String selectedFrameGeneration = null;
@@ -1236,6 +1242,8 @@ public class MainActivity extends AppCompatActivity {
         selectedMesaVkWsiPresentMode = preferences.getString(SELECTED_MESA_VK_WSI_PRESENT_MODE,
                 SELECTED_MESA_VK_WSI_PRESENT_MODE_DEFAULT_VALUE);
         selectedTuDebugPreset = preferences.getString(SELECTED_TU_DEBUG_PRESET, SELECTED_TU_DEBUG_PRESET_DEFAULT_VALUE);
+        selectedTuTextureLodBias = preferences.getString(SELECTED_TU_TEXTURE_LOD_BIAS, SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE);
+        selectedTuForceMipLevel = preferences.getString(SELECTED_TU_FORCE_MIP_LEVEL, SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE);
         selectedVramLimit = (vramLimit != null ? vramLimit
                 : preferences.getString(SELECTED_VRAM_LIMIT, SELECTED_VRAM_LIMIT_DEFAULT_VALUE));
         selectedScalingFilter = preferences.getString(SELECTED_SCALING_FILTER, SCALING_FILTER_LINEAR);

@@ -27,6 +27,10 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.FRAMESKIP_4;
 import static com.windroid.emu.activities.GeneralSettingsActivity.FRAMESKIP_5;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_DEBUG_PRESET;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_DEBUG_PRESET_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TEXTURE_LOD_BIAS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL;
+import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SPINNER;
@@ -90,6 +94,14 @@ public class DriversSettingsFragment extends Fragment {
                                 new String[] { "noconform", "flushall", "syncdraw",
                                                 "sysmem", "gmem", "nolrz", "noubwc", "nomultipos", "forcebin" },
                                 CHECKBOX, SELECTED_TU_DEBUG_PRESET_DEFAULT_VALUE, SELECTED_TU_DEBUG_PRESET);
+                addToAdapter(
+                                R.string.tu_texture_lod_bias_title, R.string.tu_texture_lod_bias_desc,
+                                new String[] { "Off", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0" },
+                                SPINNER, SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE, SELECTED_TU_TEXTURE_LOD_BIAS);
+                addToAdapter(
+                                R.string.tu_force_mip_level_title, R.string.tu_force_mip_level_desc,
+                                new String[] { "Off", "50% (1)", "25% (2)", "12.5% (3)" },
+                                SPINNER, SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE, SELECTED_TU_FORCE_MIP_LEVEL);
                 addToAdapter(R.string.select_gl_profile_title, R.string.null_desc,
                                 new String[] {
                                                 "GL 2.1", "GL 3.0",

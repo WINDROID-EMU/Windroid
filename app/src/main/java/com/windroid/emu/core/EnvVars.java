@@ -39,6 +39,8 @@ import static com.windroid.emu.activities.MainActivity.selectedDXVKHud;
 import static com.windroid.emu.activities.MainActivity.selectedGLProfile;
 import static com.windroid.emu.activities.MainActivity.selectedMesaVkWsiPresentMode;
 import static com.windroid.emu.activities.MainActivity.selectedTuDebugPreset;
+import static com.windroid.emu.activities.MainActivity.selectedTuTextureLodBias;
+import static com.windroid.emu.activities.MainActivity.selectedTuForceMipLevel;
 import static com.windroid.emu.activities.MainActivity.selectedVramLimit;
 import static com.windroid.emu.activities.MainActivity.selectedWine;
 import static com.windroid.emu.activities.MainActivity.strBoolToNum;
@@ -124,6 +126,17 @@ public class EnvVars {
             tuDebug = tuDebug + ",max_vram:" + vramValue;
         }
         vars.add("TU_DEBUG=" + tuDebug);
+
+        if (selectedTuTextureLodBias != null && !selectedTuTextureLodBias.equals("Off")) {
+            vars.add("TU_TEXTURE_LOD_BIAS=" + selectedTuTextureLodBias);
+        }
+
+        if (selectedTuForceMipLevel != null && !selectedTuForceMipLevel.equals("Off")) {
+            String mipVal = selectedTuForceMipLevel.replaceAll("[^0-9]", "");
+            if (!mipVal.isEmpty()) {
+                vars.add("TU_FORCE_MIP_LEVEL=" + mipVal);
+            }
+        }
 
         vars.add("ZINK_DEBUG=compact");
         vars.add("ZINK_DESCRIPTORS=lazy");
