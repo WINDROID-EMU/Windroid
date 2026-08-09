@@ -31,6 +31,8 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TE
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SPINNER;
@@ -102,6 +104,9 @@ public class DriversSettingsFragment extends Fragment {
                                 R.string.tu_force_mip_level_title, R.string.tu_force_mip_level_desc,
                                 new String[] { "Off", "50% (1)", "25% (2)", "12.5% (3)" },
                                 SPINNER, SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE, SELECTED_TU_FORCE_MIP_LEVEL);
+                addToAdapter(R.string.tu_force_shading_rate_title, R.string.tu_force_shading_rate_desc, null, SWITCH,
+                                String.valueOf(ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE),
+                                ENABLE_TU_FORCE_SHADING_RATE);
                 addToAdapter(R.string.select_gl_profile_title, R.string.null_desc,
                                 new String[] {
                                                 "GL 2.1", "GL 3.0",

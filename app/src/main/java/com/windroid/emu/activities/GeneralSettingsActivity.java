@@ -381,6 +381,8 @@ public class GeneralSettingsActivity extends AppCompatActivity {
     public final static String SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE = "Off";
     public final static String SELECTED_TU_FORCE_MIP_LEVEL = "selectedTuForceMipLevel";
     public final static String SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE = "Off";
+    public final static String ENABLE_TU_FORCE_SHADING_RATE = "enableTuForceShadingRate";
+    public final static boolean ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE = false;
     public final static String SELECTED_VRAM_LIMIT = "selectedVramLimit";
     public final static String SELECTED_VRAM_LIMIT_DEFAULT_VALUE = "Auto";
     public final static String ENABLE_DRI3 = "enableDRI3";

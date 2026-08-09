@@ -41,6 +41,7 @@ import static com.windroid.emu.activities.MainActivity.selectedMesaVkWsiPresentM
 import static com.windroid.emu.activities.MainActivity.selectedTuDebugPreset;
 import static com.windroid.emu.activities.MainActivity.selectedTuTextureLodBias;
 import static com.windroid.emu.activities.MainActivity.selectedTuForceMipLevel;
+import static com.windroid.emu.activities.MainActivity.enableTuForceShadingRate;
 import static com.windroid.emu.activities.MainActivity.selectedVramLimit;
 import static com.windroid.emu.activities.MainActivity.selectedWine;
 import static com.windroid.emu.activities.MainActivity.strBoolToNum;
@@ -136,6 +137,10 @@ public class EnvVars {
             if (!mipVal.isEmpty()) {
                 vars.add("TU_FORCE_MIP_LEVEL=" + mipVal);
             }
+        }
+
+        if (enableTuForceShadingRate) {
+            vars.add("TU_FORCE_SHADING_RATE=1");
         }
 
         vars.add("ZINK_DEBUG=compact");
