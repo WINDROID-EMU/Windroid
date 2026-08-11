@@ -12,6 +12,8 @@ import static com.windroid.emu.core.ShellLoader.runCommand;
 import static com.windroid.emu.core.ShellLoader.runCommandWithOutput;
 import static com.windroid.emu.fragments.DebugSettingsFragment.availableCPUs;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WineWrapper {
+    private static final String TAG = "WineWrapper";
     private static final String IS_BOX64 = deviceArch.equals("x86_64") ? "" : "box64";
 
     /**
@@ -68,13 +71,28 @@ public class WineWrapper {
     }
 
     public static void waitForProcess(String name) {
+        waitForProcess(name, 60000); // Default timeout of 60 seconds
+    }
+
+    public static void waitForProcess(String name, long timeoutMs) {
+        long startTime = System.currentTimeMillis();
         while (true) {
             if (isProcessRunning(name)) {
                 return;
             }
+            
+            // Check timeout
+            if (System.currentTimeMillis() - startTime > timeoutMs) {
+                Log.w(TAG, "Timeout waiting for process: " + name);
+                return;
+            }
+            
             try {
                 Thread.sleep(125);
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                Log.w(TAG, "Process wait interrupted", e);
+                Thread.currentThread().interrupt();
+                return;
             }
         }
     }
@@ -128,8 +146,10 @@ public class WineWrapper {
 
         runCommand(getEnv() + "WINEPREFIX='" + winePrefixesDir + "/" + winePrefix + "' " + IS_BOX64 + " " + wineserverBin + " -k",
                 false);
-        runCommand("pkill -SIGINT -f .exe", false);
-        runCommand("pkill -SIGINT -f wineserver", false);
+        runCommand("pkill -9 -f .exe", false);
+        runCommand("pkill -9 -f wineserver", false);
+        runCommand("pkill -9 -f wineboot", false);
+        runCommand("pkill -9 -f wine", false);
     }
 
     public static void clearDrives() {
@@ -210,7 +230,8 @@ public class WineWrapper {
                     return Integer.parseInt(line.substring(line.indexOf(":") + 1).replace("kB", "").trim());
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to read process RAM usage for PID: " + pid, e);
         }
 
         return 0;
@@ -230,7 +251,8 @@ public class WineWrapper {
                     return line.substring(line.indexOf(":") + 1).replace(",", "").trim();
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to read process CPU affinity for PID: " + pid, e);
         }
 
         return "0";
@@ -304,7 +326,8 @@ public class WineWrapper {
                                         new ExeProcess(processName, unixPid, cwd, path, iconPath, ramUsageKB,
                                                 cpuUsage / availableCPUs.length));
                             }
-                        } catch (IOException ignored) {
+                        } catch (IOException e) {
+                            Log.e(TAG, "Failed to read process info for PID: " + unixPid, e);
                         }
                     }
                 }
@@ -367,7 +390,8 @@ public class WineWrapper {
                 return (totalTimeSeconds / secondsActive) * 100F;
             }
 
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to calculate CPU usage for PID: " + pid, e);
         }
         return 0F;
     }

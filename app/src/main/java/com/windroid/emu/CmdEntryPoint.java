@@ -47,8 +47,13 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
     }
 
     CmdEntryPoint(String[] args) {
-        if (!start(args))
-            System.exit(1);
+        if (!start(args)) {
+            Log.e("CmdEntryPoint", "Failed to start native entry point");
+            // Instead of System.exit(), we'll let the Looper terminate naturally
+            // The process will exit when the main thread finishes
+            Looper.myLooper().quit();
+            return;
+        }
 
         spawnListeningThread();
         sendBroadcastDelayed();
@@ -197,7 +202,8 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
             } catch (Exception e) {
                 Log.e("CmdEntryPoint", "Failed to dlopen " + libPath, e);
                 System.err.println("Failed to load native library. Did you install the right apk? Try the universal one.");
-                System.exit(134);
+                // Instead of System.exit(), we'll let the Looper terminate naturally
+                Looper.myLooper().quit();
             }
         }
     }

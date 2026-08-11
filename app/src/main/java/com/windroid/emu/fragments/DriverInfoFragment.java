@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DriverInfoFragment extends Fragment {
+    private Thread vulkanInfoThread = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -95,26 +97,52 @@ public class DriverInfoFragment extends Fragment {
 
                 generateICDFile(driverPath);
 
-                new Thread(() -> {
-                    String vulkanInfoBin = usrDir + "/bin/vulkaninfo";
-                    runCommand("chmod +x " + vulkanInfoBin, false);
-                    String driverInfo = runCommandWithOutput(getEnv() + vulkanInfoBin, true);
+                vulkanInfoThread = new Thread(() -> {
+                    try {
+                        String vulkanInfoBin = usrDir + "/bin/vulkaninfo";
+                        runCommand("chmod +x " + vulkanInfoBin, false);
+                        
+                        // Add timeout to prevent hanging on driver crashes
+                        String driverInfo = runCommandWithOutput("timeout 10 " + getEnv() + vulkanInfoBin, true);
 
-                    driverInfoText.post(() -> {
-                        ViewPropertyAnimator animator = driverInfoText.animate();
-                        animator.alpha(0F);
-                        animator.setDuration(100L);
-                        animator.withEndAction(() -> {
-                            driverInfoText.setText(driverInfo);
-                            animator.alpha(1F);
-                            animator.setDuration(100L);
-                            animator.start();
-                        });
-                        animator.start();
+                        if (isAdded() && !isDetached()) {
+                            driverInfoText.post(() -> {
+                                if (isAdded() && !isDetached()) {
+                                    ViewPropertyAnimator animator = driverInfoText.animate();
+                                    animator.alpha(0F);
+                                    animator.setDuration(100L);
+                                    animator.withEndAction(() -> {
+                                        driverInfoText.setText(driverInfo);
+                                        animator.alpha(1F);
+                                        animator.setDuration(100L);
+                                        animator.start();
+                                    });
+                                    animator.start();
 
-                        scrollView.scrollTo(0, 0);
-                    });
-                }).start();
+                                    scrollView.scrollTo(0, 0);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        Log.e("DriverInfoFragment", "Error running vulkaninfo", e);
+                        if (isAdded() && !isDetached()) {
+                            driverInfoText.post(() -> {
+                                if (isAdded() && !isDetached()) {
+                                    String errorMsg = "Error: Failed to get Vulkan driver info.\n\n" +
+                                            "The driver may have crashed or is incompatible.\n" +
+                                            "This is common with AdrenoTools drivers on some devices.\n\n" +
+                                            "Try:\n" +
+                                            "- Using a different Vulkan driver\n" +
+                                            "- Disabling AdrenoTools\n" +
+                                            "- Checking device compatibility\n\n" +
+                                            "Error details: " + e.getMessage();
+                                    driverInfoText.setText(errorMsg);
+                                }
+                            });
+                        }
+                    }
+                });
+                vulkanInfoThread.start();
             }
 
             @Override
@@ -123,5 +151,13 @@ public class DriverInfoFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (vulkanInfoThread != null && vulkanInfoThread.isAlive()) {
+            vulkanInfoThread.interrupt();
+        }
     }
 }

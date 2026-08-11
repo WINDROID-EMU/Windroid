@@ -33,6 +33,10 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FO
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SPINNER;
@@ -107,6 +111,12 @@ public class DriversSettingsFragment extends Fragment {
                 addToAdapter(R.string.tu_force_shading_rate_title, R.string.tu_force_shading_rate_desc, null, SWITCH,
                                 String.valueOf(ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE),
                                 ENABLE_TU_FORCE_SHADING_RATE);
+                addToAdapter(R.string.tu_force_sysmem_title, R.string.tu_force_sysmem_desc, null, SWITCH,
+                                String.valueOf(ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE),
+                                ENABLE_TU_FORCE_SYSMEM);
+                addToAdapter(R.string.tu_disable_heavy_effects_title, R.string.tu_disable_heavy_effects_desc, null, SWITCH,
+                                String.valueOf(ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE),
+                                ENABLE_TU_DISABLE_HEAVY_EFFECTS);
                 addToAdapter(R.string.select_gl_profile_title, R.string.null_desc,
                                 new String[] {
                                                 "GL 2.1", "GL 3.0",

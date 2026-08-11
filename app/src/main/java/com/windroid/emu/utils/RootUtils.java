@@ -9,6 +9,15 @@ public class RootUtils {
     private static final String TAG = "RootUtils";
     private static String[] originalCpuGovernors;
     private static String originalGpuGovernor;
+
+    /**
+     * Escapes a shell argument to prevent command injection.
+     * Wraps the argument in single quotes and escapes any existing single quotes.
+     */
+    private static String escapeShellArg(String arg) {
+        if (arg == null) return "";
+        return "'" + arg.replace("'", "'\\''") + "'";
+    }
     private static boolean originalSelinuxPermissive;
 
     /**
@@ -37,26 +46,26 @@ public class RootUtils {
 
         for (int i = 0; i < cpuCount; i++) {
             String path = "/sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor";
-            originalCpuGovernors[i] = runCommandWithOutput("su -c 'cat " + path + "'", false);
+            originalCpuGovernors[i] = runCommandWithOutput("su -c cat " + escapeShellArg(path), false);
             if (originalCpuGovernors[i] != null) {
                 originalCpuGovernors[i] = originalCpuGovernors[i].trim();
-                runCommand("su -c 'echo performance > " + path + "'", false);
+                runCommand("su -c sh -c 'echo performance > " + escapeShellArg(path) + "'", false);
             }
         }
 
         // GPU (Adreno)
         String adrenoPath = "/sys/class/kgsl/kgsl-3d0/devfreq/governor";
-        originalGpuGovernor = runCommandWithOutput("su -c 'cat " + adrenoPath + "'", false);
+        originalGpuGovernor = runCommandWithOutput("su -c cat " + escapeShellArg(adrenoPath), false);
         if (originalGpuGovernor != null) {
             originalGpuGovernor = originalGpuGovernor.trim();
-            runCommand("su -c 'echo performance > " + adrenoPath + "'", false);
+            runCommand("su -c sh -c 'echo performance > " + escapeShellArg(adrenoPath) + "'", false);
         } else {
             // Try another common path
             adrenoPath = "/sys/class/kgsl/kgsl-3d0/governor";
-            originalGpuGovernor = runCommandWithOutput("su -c 'cat " + adrenoPath + "'", false);
+            originalGpuGovernor = runCommandWithOutput("su -c cat " + escapeShellArg(adrenoPath), false);
             if (originalGpuGovernor != null) {
                 originalGpuGovernor = originalGpuGovernor.trim();
-                runCommand("su -c 'echo performance > " + adrenoPath + "'", false);
+                runCommand("su -c sh -c 'echo performance > " + escapeShellArg(adrenoPath) + "'", false);
             }
         }
 
@@ -75,27 +84,31 @@ public class RootUtils {
         if (originalCpuGovernors != null) {
             for (int i = 0; i < originalCpuGovernors.length; i++) {
                 if (originalCpuGovernors[i] != null) {
-                    runCommand("su -c 'echo " + originalCpuGovernors[i] + " > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor'", false);
+                    String path = "/sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor";
+                    runCommand("su -c sh -c 'echo " + escapeShellArg(originalCpuGovernors[i]) + " > " + escapeShellArg(path) + "'", false);
                 }
             }
         } else {
             // Fallback to schedutil or interactive
             for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
-                runCommand("su -c 'echo schedutil > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor' 2>/dev/null", false);
-                runCommand("su -c 'echo interactive > /sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor' 2>/dev/null", false);
+                String path = "/sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_governor";
+                runCommand("su -c sh -c 'echo schedutil > " + escapeShellArg(path) + "' 2>/dev/null", false);
+                runCommand("su -c sh -c 'echo interactive > " + escapeShellArg(path) + "' 2>/dev/null", false);
             }
         }
 
         // GPU
         if (originalGpuGovernor != null) {
             String adrenoPath = "/sys/class/kgsl/kgsl-3d0/devfreq/governor";
-            runCommand("su -c 'echo " + originalGpuGovernor + " > " + adrenoPath + "' 2>/dev/null", false);
+            runCommand("su -c sh -c 'echo " + escapeShellArg(originalGpuGovernor) + " > " + escapeShellArg(adrenoPath) + "' 2>/dev/null", false);
             adrenoPath = "/sys/class/kgsl/kgsl-3d0/governor";
-            runCommand("su -c 'echo " + originalGpuGovernor + " > " + adrenoPath + "' 2>/dev/null", false);
+            runCommand("su -c sh -c 'echo " + escapeShellArg(originalGpuGovernor) + " > " + escapeShellArg(adrenoPath) + "' 2>/dev/null", false);
         } else {
             // Fallback
-            runCommand("su -c 'echo msm-adreno-tz > /sys/class/kgsl/kgsl-3d0/devfreq/governor' 2>/dev/null", false);
-            runCommand("su -c 'echo msm-adreno-tz > /sys/class/kgsl/kgsl-3d0/governor' 2>/dev/null", false);
+            String path1 = "/sys/class/kgsl/kgsl-3d0/devfreq/governor";
+            String path2 = "/sys/class/kgsl/kgsl-3d0/governor";
+            runCommand("su -c sh -c 'echo msm-adreno-tz > " + escapeShellArg(path1) + "' 2>/dev/null", false);
+            runCommand("su -c sh -c 'echo msm-adreno-tz > " + escapeShellArg(path2) + "' 2>/dev/null", false);
         }
 
         // Reset I/O Scheduler

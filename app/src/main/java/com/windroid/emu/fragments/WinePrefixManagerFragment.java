@@ -13,6 +13,7 @@ import static com.windroid.emu.adapters.AdapterPreset.selectedPresetId;
 import static com.windroid.emu.utils.FileUtils.copyRecursively;
 import static com.windroid.emu.utils.FileUtils.deleteDirectoryRecursively;
 import static com.windroid.emu.core.ShellLoader.runCommand;
+import static com.windroid.emu.core.WineWrapper.killAll;
 import static com.windroid.emu.core.WineWrapper.wine;
 import static com.windroid.emu.fragments.CreatePresetFragment.WINE_PREFIX_PRESET;
 
@@ -146,6 +147,7 @@ public class WinePrefixManagerFragment extends Fragment {
 
             selectedWine = wineId;
 
+            killAll();
             wine("wineboot");
 
             copyRecursively(coreFonts, wineFontsDir);

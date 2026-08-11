@@ -5,7 +5,7 @@ set(can_use_assembler TRUE)
 enable_language(ASM)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Release)
 
 include(TestBigEndian)
@@ -82,5 +82,5 @@ foreach(project xorgproto fontenc md pixman tirpc xshmfence Xdmcp Xau Xfont2 xkb
     include(recipes/${project}.cmake)
 endforeach()
 
-add_library(windroid SHARED micewine/shell_loader.c micewine/controller.c)
+add_library(windroid SHARED micewine/shell_loader.c micewine/controller.c fexcore/fex_wrapper.cpp)
 target_link_libraries(windroid PUBLIC android log)

@@ -145,6 +145,10 @@
     <string name="tu_force_mip_level_desc">Force smaller texture mipmap resolution (Off, 50%, 25%, 12.5%)</string>
     <string name="tu_force_shading_rate_title" translatable="false">TU_FORCE_SHADING_RATE</string>
     <string name="tu_force_shading_rate_desc">Enable variable rate shading for better performance</string>
+    <string name="tu_force_sysmem_title" translatable="false">TU_FORCE_SYSMEM</string>
+    <string name="tu_force_sysmem_desc">Force system memory rendering for better performance</string>
+    <string name="tu_disable_heavy_effects_title" translatable="false">TU_DISABLE_HEAVY_EFFECTS</string>
+    <string name="tu_disable_heavy_effects_desc">Disable heavy visual effects for maximum performance</string>
     <string name="add_button">Add Button</string>
     <string name="add_virtual_axis">Add Virtual Axis</string>
     <string name="file_manager_title">File Manager</string>

@@ -1,5 +1,7 @@
 package com.windroid.emu.utils;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,8 +11,11 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class FileUtils {
+    private static final String TAG = "FileUtils";
+
     public static void copyRecursively(File source, File target) {
         if (!source.exists()) {
+            Log.w(TAG, "Source directory does not exist: " + source.getPath());
             return;
         }
 
@@ -30,10 +35,12 @@ public class FileUtils {
                     } else {
                         Files.copy(path, targetResolved, StandardCopyOption.REPLACE_EXISTING);
                     }
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to copy file: " + path, e);
                 }
             });
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to walk source directory: " + sourcePath, e);
         }
     }
 
@@ -44,10 +51,12 @@ public class FileUtils {
             paths.sorted(Comparator.reverseOrder()).forEach(path -> {
                 try {
                     Files.delete(path);
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to delete file: " + path, e);
                 }
             });
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to walk directory for deletion: " + directory, e);
         }
     }
 

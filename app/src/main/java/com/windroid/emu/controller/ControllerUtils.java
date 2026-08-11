@@ -116,8 +116,9 @@ public class ControllerUtils {
     }
 
     public static void prepareControllersMappings() {
-        for (int i = 0; i < connectedPhysicalControllers.size(); i++) {
-            PhysicalController physicalController = connectedPhysicalControllers.get(i);
+        List<PhysicalController> controllersCopy = getConnectedControllersCopy();
+        for (int i = 0; i < controllersCopy.size(); i++) {
+            PhysicalController physicalController = controllersCopy.get(i);
             String presetName = getControllerPreset(selectedGameName, i);
             boolean controllerIsXInput = getControllerXInput(selectedGameName, i);
 
@@ -447,8 +448,9 @@ public class ControllerUtils {
 
     public static void updateAxisState(MotionEvent event) {
         controllerIndex = -1;
-        for (int i = 0; i < connectedPhysicalControllers.size(); i++) {
-            if (connectedPhysicalControllers.get(i).id == event.getDeviceId()) {
+        List<PhysicalController> controllersCopy = getConnectedControllersCopy();
+        for (int i = 0; i < controllersCopy.size(); i++) {
+            if (controllersCopy.get(i).id == event.getDeviceId()) {
                 controllerIndex = i;
                 break;
             }
@@ -457,7 +459,7 @@ public class ControllerUtils {
         if (controllerIndex == -1)
             return;
 
-        PhysicalController pController = connectedPhysicalControllers.get(controllerIndex);
+        PhysicalController pController = controllersCopy.get(controllerIndex);
 
         pController.state.lx = event.getAxisValue(MotionEvent.AXIS_X);
         pController.state.ly = event.getAxisValue(MotionEvent.AXIS_Y);
@@ -507,7 +509,28 @@ public class ControllerUtils {
         }
     }
 
+    private static final Object controllersLock = new Object();
     public static List<PhysicalController> connectedPhysicalControllers = getConnectedControllers();
+
+    public static void addPhysicalController(PhysicalController controller) {
+        synchronized (controllersLock) {
+            connectedPhysicalControllers.add(controller);
+        }
+    }
+
+    public static void removePhysicalController(int index) {
+        synchronized (controllersLock) {
+            if (index >= 0 && index < connectedPhysicalControllers.size()) {
+                connectedPhysicalControllers.remove(index);
+            }
+        }
+    }
+
+    public static List<PhysicalController> getConnectedControllersCopy() {
+        synchronized (controllersLock) {
+            return new ArrayList<>(connectedPhysicalControllers);
+        }
+    }
 
     private static final int MAPPING_TYPE_KEYBOARD_MOUSE = 0;
     private static final int MAPPING_TYPE_XINPUT = 1;

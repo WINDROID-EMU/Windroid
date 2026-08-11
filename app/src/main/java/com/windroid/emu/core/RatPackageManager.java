@@ -19,6 +19,7 @@ import static java.util.UUID.randomUUID;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.windroid.emu.R;
 
@@ -43,6 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RatPackageManager {
+    private static final String TAG = "RatPackageManager";
     public static void installRat(RatPackage ratPackage, Context context) {
         progressBarIsIndeterminate = false;
         progressBarValue = 0;
@@ -122,7 +124,8 @@ public class RatPackageManager {
                                 "version=" + dxvkVersion + "\n" +
                                 "architecture=any\n" +
                                 "vkDriverLib=\n");
-                        } catch (IOException ignored) {
+                        } catch (IOException e) {
+                            Log.e(TAG, "Failed to write DXVK pkg-header", e);
                         }
                     }
                 }
@@ -131,11 +134,11 @@ public class RatPackageManager {
                         String wineD3DVersion = wineD3DFile.getName().substring(wineD3DFile.getName().indexOf("-") + 1);
 
                         File wineD3DDir = new File(ratPackagesDir, "WineD3D-" + randomUUID());
-                        File wineD3DFilesFir = new File(wineD3DDir, "files");
+                        File wineD3DFilesDir = new File(wineD3DDir, "files");
                         wineD3DDir.mkdirs();
-                        wineD3DFilesFir.mkdirs();
+                        wineD3DFilesDir.mkdirs();
 
-                        wineD3DFile.renameTo(wineD3DFilesFir);
+                        wineD3DFile.renameTo(wineD3DFilesDir);
 
                         File pkgHeader = new File(wineD3DDir, "pkg-header");
 
@@ -147,7 +150,8 @@ public class RatPackageManager {
                                 "architecture=any\n" +
                                 "vkDriverLib=\n"
                             );
-                        } catch (IOException ignored) {
+                        } catch (IOException e) {
+                            Log.e(TAG, "Failed to write WineD3D pkg-header", e);
                         }
                     }
                 }
@@ -169,10 +173,11 @@ public class RatPackageManager {
                                 "name=VKD3D\n" +
                                 "category=VKD3D\n" +
                                 "version=" + vkd3dVersion + "\n" +
-                                "architecture=any\nv" +
-                                "kDriverLib=\n"
+                                "architecture=any\n" +
+                                "vkDriverLib=\n"
                             );
-                        } catch (IOException ignored) {
+                        } catch (IOException e) {
+                            Log.e(TAG, "Failed to write VKD3D pkg-header", e);
                         }
                     }
                 }
@@ -242,16 +247,18 @@ public class RatPackageManager {
                             "name=" + ratPackage.name + "\n" +
                             "category=" + ratPackage.category + "\n" +
                             "version=" + ratPackage.version + "\n" +
-                            "architecture=" + ratPackage.architecture + "\nv" +
+                            "architecture=" + ratPackage.architecture + "\n" +
                             "vkDriverLib=\n"
                     );
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to write Box64 pkg-header", e);
                 }
 
                 if (!installingRootFS) {
                     try (FileWriter writer = new FileWriter(new File(extractDir, "pkg-external"))) {
                         writer.write("");
-                    } catch (IOException ignored) {
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to write pkg-external", e);
                     }
                 }
             }
@@ -276,13 +283,15 @@ public class RatPackageManager {
                             "architecture=" + ratPackage.architecture + "\n" +
                             "vkDriverLib=" + extractDir + "/files/usr/lib/" + ratPackage.driverLib + "\n"
                     );
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to write VulkanDriver/AdrenoTools pkg-header", e);
                 }
 
                 if (!installingRootFS) {
                     try (FileWriter writer = new FileWriter(new File(extractDir, "pkg-external"))) {
                         writer.write("");
-                    } catch (IOException ignored) {
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to write pkg-external", e);
                     }
                 }
             }
@@ -297,13 +306,15 @@ public class RatPackageManager {
                             "architecture=" + ratPackage.architecture + "\n" +
                             "vkDriverLib=\n"
                     );
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to write Wine/DXVK/WineD3D/VKD3D pkg-header", e);
                 }
 
                 if (!installingRootFS) {
                     try (FileWriter writer = new FileWriter(new File(extractDir, "pkg-external"))) {
                         writer.write("");
-                    } catch (IOException ignored) {
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to write pkg-external", e);
                     }
                 }
             }
@@ -422,7 +433,8 @@ public class RatPackageManager {
             try {
                 List<String> lines = Files.readAllLines(pkgHeader.toPath());
                 return lines.get(0).substring(lines.get(0).indexOf("=") + 1) + " " + lines.get(2).substring(lines.get(2).indexOf("=") + 1);
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to read package name and version", e);
             }
         }
 
@@ -470,13 +482,15 @@ public class RatPackageManager {
 
         try (FileWriter writer = new FileWriter(pkgHeader)) {
             writer.write("name=" + adrenoToolsPackage.name + "\ncategory=AdrenoToolsDriver\nversion=" + adrenoToolsPackage.version + "\narchitecture=aarch64\nvkDriverLib=" + driverLibPath + "\n");
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to write AdrenoToolsDriver pkg-header", e);
         }
 
         if (!installingRootFS) {
             try (FileWriter writer = new FileWriter(new File(extractDir, "pkg-external"))) {
                 writer.write("");
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to write pkg-external for AdrenoToolsDriver", e);
             }
         }
     }
@@ -510,7 +524,8 @@ public class RatPackageManager {
                     driverLib = meta.libraryName;
                     author = meta.author;
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to read AdrenoTools meta.json", e);
             }
         }
 
@@ -556,7 +571,7 @@ public class RatPackageManager {
                 inputStream = getFileStreamFromTarXZ(ratPath, "pkg-header");
             } else {
                 try (ZipFile zipFile = new ZipFile(ratFile)) {
-                    if (!zipFile.isValidZipFile() && !zipFile.isValidZipFile()) return;
+                    if (!zipFile.isValidZipFile()) return;
 
                     FileHeader ratHeader = zipFile.getFileHeader("pkg-header");
 
@@ -584,7 +599,8 @@ public class RatPackageManager {
                 version = lines.get(2).substring(lines.get(2).indexOf("=") + 1);
                 architecture = lines.get(3).substring(lines.get(3).indexOf("=") + 1);
                 driverLib = lines.get(4).substring(lines.get(4).indexOf("=") + 1);
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to read Rat package header", e);
             }
         }
 

@@ -138,7 +138,7 @@ public class LorieView extends SurfaceView implements InputStub {
             context = ((ContextWrapper) context).getBaseContext();
         }
 
-        throw new NullPointerException();
+        throw new IllegalStateException("LorieView is not attached to an Activity");
     }
 
     void getDimensionsFromSettings() {
@@ -160,13 +160,6 @@ public class LorieView extends SurfaceView implements InputStub {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        /*
-        if (preferences?.getBoolean("displayStretch", false) == true) {
-            holder.setSizeFromLayout()
-            return
-        }
-         */
 
         if (preferences != null) {
             if (preferences.getBoolean(DISPLAY_STRETCH, DISPLAY_STRETCH_DEFAULT_VALUE)) {

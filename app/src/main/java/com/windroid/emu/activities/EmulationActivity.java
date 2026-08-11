@@ -158,6 +158,7 @@ public class EmulationActivity extends AppCompatActivity implements View.OnApply
     private DrawerLayout drawerLayout;
     private VirtualKeyboardInputView virtualKeyboardInputView;
     private VirtualControllerInputView virtualControllerInputView;
+    private boolean isReceiverRegistered = false;
 
     @Override
     @SuppressLint({ "AppCompatMethod", "ObsoleteSdkInt", "ClickableViewAccessibility", "WrongConstant",
@@ -522,6 +523,7 @@ public class EmulationActivity extends AppCompatActivity implements View.OnApply
 
         androidx.core.content.ContextCompat.registerReceiver(this, receiver, new IntentFilter(ACTION_START),
                 androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED);
+        isReceiverRegistered = true;
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -574,7 +576,17 @@ public class EmulationActivity extends AppCompatActivity implements View.OnApply
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(receiver);
+        // Only unregister if it was actually registered
+        if (isReceiverRegistered) {
+            unregisterReceiver(receiver);
+            isReceiverRegistered = false;
+        }
+        
+        // Unregister preference change listener
+        if (preferences != null) {
+            preferences.unregisterOnSharedPreferenceChangeListener(preferencesChangedListener);
+        }
+        
         super.onDestroy();
     }
 

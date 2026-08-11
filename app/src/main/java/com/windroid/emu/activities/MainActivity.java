@@ -36,6 +36,10 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FO
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VULKAN_DRIVER;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_SCALING_FILTER;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_FRAME_GENERATION;
@@ -266,12 +270,24 @@ public class MainActivity extends AppCompatActivity {
                         displayResolution = "1280x720";
                     if (d3dxRenderer == null)
                         d3dxRenderer = "DXVK";
-                    if (wineD3D == null)
-                        wineD3D = listRatPackages("WineD3D").get(0).getFolderName();
-                    if (dxvk == null)
-                        dxvk = listRatPackages("DXVK").get(0).getFolderName();
-                    if (vkd3d == null)
-                        vkd3d = listRatPackages("VKD3D").get(0).getFolderName();
+                    if (wineD3D == null) {
+                        List<RatPackageManager.RatPackage> wineD3DPackages = listRatPackages("WineD3D");
+                        if (!wineD3DPackages.isEmpty()) {
+                            wineD3D = wineD3DPackages.get(0).getFolderName();
+                        }
+                    }
+                    if (dxvk == null) {
+                        List<RatPackageManager.RatPackage> dxvkPackages = listRatPackages("DXVK");
+                        if (!dxvkPackages.isEmpty()) {
+                            dxvk = dxvkPackages.get(0).getFolderName();
+                        }
+                    }
+                    if (vkd3d == null) {
+                        List<RatPackageManager.RatPackage> vkd3dPackages = listRatPackages("VKD3D");
+                        if (!vkd3dPackages.isEmpty()) {
+                            vkd3d = vkd3dPackages.get(0).getFolderName();
+                        }
+                    }
                     if (cpuAffinity == null)
                         cpuAffinity = String.join(",", availableCPUs);
                     if (vramLimit == null)
@@ -544,13 +560,12 @@ public class MainActivity extends AppCompatActivity {
             if (device == null)
                 return;
 
-            if (connectedPhysicalControllers.stream().anyMatch(c -> c.id == deviceId))
+            if (ControllerUtils.getConnectedControllersCopy().stream().anyMatch(c -> c.id == deviceId))
                 return;
             if (((device.getSources() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
                     || ((device.getSources() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)) {
                 if (!device.getName().contains("uinput")) {
-                    connectedPhysicalControllers
-                            .add(new ControllerUtils.PhysicalController(device.getName(), deviceId));
+                    ControllerUtils.addPhysicalController(new ControllerUtils.PhysicalController(device.getName(), deviceId));
                     prepareControllersMappings();
                     sendBroadcast(new Intent(ACTION_UPDATE_CONTROLLERS_STATUS).setPackage("com.windroid.emu"));
                 }
@@ -559,9 +574,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onInputDeviceRemoved(int deviceId) {
+            List<ControllerUtils.PhysicalController> controllersCopy = ControllerUtils.getConnectedControllersCopy();
             int index = -1;
-            for (int i = 0; i < connectedPhysicalControllers.size(); i++) {
-                if (connectedPhysicalControllers.get(i).id == deviceId) {
+            for (int i = 0; i < controllersCopy.size(); i++) {
+                if (controllersCopy.get(i).id == deviceId) {
                     index = i;
                     break;
                 }
@@ -570,8 +586,8 @@ public class MainActivity extends AppCompatActivity {
             if (index == -1)
                 return;
 
-            disconnectController(connectedPhysicalControllers.get(index).virtualControllerID);
-            connectedPhysicalControllers.remove(index);
+            disconnectController(controllersCopy.get(index).virtualControllerID);
+            ControllerUtils.removePhysicalController(index);
             sendBroadcast(new Intent(ACTION_UPDATE_CONTROLLERS_STATUS).setPackage("com.windroid.emu"));
         }
     };
@@ -696,9 +712,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!setupDone && finishedWelcomeScreen) {
-            if (rootFSIsDownloaded) {
+            File rootfsFile = new File(appRootDir.getPath() + "/rootfs.rat");
+            if (rootFSIsDownloaded && rootfsFile.exists()) {
                 sendBroadcast(new Intent(ACTION_SETUP).setPackage("com.windroid.emu"));
             } else {
+                // Reset flag if file doesn't exist
+                if (rootFSIsDownloaded && !rootfsFile.exists()) {
+                    rootFSIsDownloaded = false;
+                }
                 new FloatingFileManagerFragment(OPERATION_SELECT_RAT, "/storage/emulated/0")
                         .show(getSupportFragmentManager(), "");
             }
@@ -717,11 +738,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        
+        // Unregister broadcast receiver
         unregisterReceiver(receiver);
-        inputManager.unregisterInputDeviceListener(inputDeviceListener);
-
+        
+        // Unregister input device listener
+        if (inputManager != null && inputDeviceListener != null) {
+            inputManager.unregisterInputDeviceListener(inputDeviceListener);
+        }
+        
+        // Release MediaPlayer to prevent memory leak
         if (bgMusic != null) {
-            bgMusic.stop();
+            if (bgMusic.isPlaying()) {
+                bgMusic.stop();
+            }
             bgMusic.release();
             bgMusic = null;
         }
@@ -959,6 +989,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (rootFSIsDownloaded) {
             new File(appRootDir.getPath() + "/rootfs.rat").delete();
+            rootFSIsDownloaded = false; // Reset flag after successful installation
         }
 
         tmpDir.mkdirs();
@@ -1102,6 +1133,8 @@ public class MainActivity extends AppCompatActivity {
     public static String selectedTuTextureLodBias = null;
     public static String selectedTuForceMipLevel = null;
     public static boolean enableTuForceShadingRate = false;
+    public static boolean enableTuForceSysmem = false;
+    public static boolean enableTuDisableHeavyEffects = false;
     public static String selectedVramLimit = null;
     public static String selectedScalingFilter = null;
     public static String selectedFrameGeneration = null;
@@ -1248,6 +1281,8 @@ public class MainActivity extends AppCompatActivity {
         selectedTuTextureLodBias = preferences.getString(SELECTED_TU_TEXTURE_LOD_BIAS, SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE);
         selectedTuForceMipLevel = preferences.getString(SELECTED_TU_FORCE_MIP_LEVEL, SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE);
         enableTuForceShadingRate = preferences.getBoolean(ENABLE_TU_FORCE_SHADING_RATE, ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE);
+        enableTuForceSysmem = preferences.getBoolean(ENABLE_TU_FORCE_SYSMEM, ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE);
+        enableTuDisableHeavyEffects = preferences.getBoolean(ENABLE_TU_DISABLE_HEAVY_EFFECTS, ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE);
         selectedVramLimit = (vramLimit != null ? vramLimit
                 : preferences.getString(SELECTED_VRAM_LIMIT, SELECTED_VRAM_LIMIT_DEFAULT_VALUE));
         selectedScalingFilter = preferences.getString(SELECTED_SCALING_FILTER, SCALING_FILTER_LINEAR);
@@ -1321,8 +1356,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String getVulkanDriverInfo(String info, boolean stdErr) {
-        return runCommandWithOutput(
-                "echo $(" + getEnv() + " DISPLAY= vulkaninfo | grep " + info + " | cut -d '=' -f 2)", stdErr);
+        try {
+            return runCommandWithOutput(
+                    "echo $(" + getEnv() + " DISPLAY= timeout 10 vulkaninfo | grep " + info + " | cut -d '=' -f 2)", stdErr);
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error getting Vulkan driver info for " + info, e);
+            return "";
+        }
     }
 
     public static String[] resolutions16_9 = new String[] {

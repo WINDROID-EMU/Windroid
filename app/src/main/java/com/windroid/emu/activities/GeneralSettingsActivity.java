@@ -383,6 +383,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
     public final static String SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE = "Off";
     public final static String ENABLE_TU_FORCE_SHADING_RATE = "enableTuForceShadingRate";
     public final static boolean ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE = false;
+    public final static String ENABLE_TU_FORCE_SYSMEM = "enableTuForceSysmem";
+    public final static boolean ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE = false;
+    public final static String ENABLE_TU_DISABLE_HEAVY_EFFECTS = "enableTuDisableHeavyEffects";
+    public final static boolean ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE = false;
     public final static String SELECTED_VRAM_LIMIT = "selectedVramLimit";
     public final static String SELECTED_VRAM_LIMIT_DEFAULT_VALUE = "Auto";
     public final static String ENABLE_DRI3 = "enableDRI3";

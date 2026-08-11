@@ -102,7 +102,7 @@ public class RatDownloaderFragment extends Fragment {
 
     private Map<String, RatPackageModel> fetchPackages() {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url("https://github.com/KreitinnSoftware/MiceWine-Repository/releases/download/default/index.json").build();
+        Request request = new Request.Builder().url("https://github.com/WINDROID-EMU/Windroid-Rats/releases/download/default/index.json").build();
         Type type = new TypeToken<Map<String, RatPackageModel>>() {}.getType();
 
         try (Response response = client.newCall(request).execute()) {
@@ -186,7 +186,7 @@ public class RatDownloaderFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://github.com/KreitinnSoftware/MiceWine-Repository/releases/download/default/" + name)
+                .url("https://github.com/WINDROID-EMU/Windroid-Rats/releases/download/default/" + name)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
