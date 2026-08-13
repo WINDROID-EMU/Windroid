@@ -104,7 +104,7 @@ public class DriversSettingsFragment extends Fragment {
                                 CHECKBOX, SELECTED_TU_DEBUG_PRESET_DEFAULT_VALUE, SELECTED_TU_DEBUG_PRESET);
                 addToAdapter(
                                 R.string.tu_texture_lod_bias_title, R.string.tu_texture_lod_bias_desc,
-                                new String[] { "Off", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0" },
+                                new String[] { "Off", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "4.0", "5.0", "6.0", "8.0", "10.0" },
                                 SPINNER, SELECTED_TU_TEXTURE_LOD_BIAS_DEFAULT_VALUE, SELECTED_TU_TEXTURE_LOD_BIAS);
                 addToAdapter(
                                 R.string.tu_force_mip_level_title, R.string.tu_force_mip_level_desc,
