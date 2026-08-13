@@ -38,6 +38,8 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORC
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_SHADOWS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_SHADOWS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VULKAN_DRIVER;
@@ -1134,6 +1136,7 @@ public class MainActivity extends AppCompatActivity {
     public static String selectedTuForceMipLevel = null;
     public static boolean enableTuForceShadingRate = false;
     public static boolean enableTuForceSysmem = false;
+    public static boolean enableTuDisableShadows = false;
     public static boolean enableTuDisableHeavyEffects = false;
     public static String selectedVramLimit = null;
     public static String selectedScalingFilter = null;
@@ -1282,6 +1285,7 @@ public class MainActivity extends AppCompatActivity {
         selectedTuForceMipLevel = preferences.getString(SELECTED_TU_FORCE_MIP_LEVEL, SELECTED_TU_FORCE_MIP_LEVEL_DEFAULT_VALUE);
         enableTuForceShadingRate = preferences.getBoolean(ENABLE_TU_FORCE_SHADING_RATE, ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE);
         enableTuForceSysmem = preferences.getBoolean(ENABLE_TU_FORCE_SYSMEM, ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE);
+        enableTuDisableShadows = preferences.getBoolean(ENABLE_TU_DISABLE_SHADOWS, ENABLE_TU_DISABLE_SHADOWS_DEFAULT_VALUE);
         enableTuDisableHeavyEffects = preferences.getBoolean(ENABLE_TU_DISABLE_HEAVY_EFFECTS, ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE);
         selectedVramLimit = (vramLimit != null ? vramLimit
                 : preferences.getString(SELECTED_VRAM_LIMIT, SELECTED_VRAM_LIMIT_DEFAULT_VALUE));

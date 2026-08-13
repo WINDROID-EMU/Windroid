@@ -147,6 +147,8 @@
     <string name="tu_force_shading_rate_desc">Enable variable rate shading for better performance</string>
     <string name="tu_force_sysmem_title" translatable="false">TU_FORCE_SYSMEM</string>
     <string name="tu_force_sysmem_desc">Force system memory rendering for better performance</string>
+    <string name="tu_disable_shadows_title" translatable="false">TU_DISABLE_SHADOWS</string>
+    <string name="tu_disable_shadows_desc">Disable shadow mapping for better performance</string>
     <string name="tu_disable_heavy_effects_title" translatable="false">TU_DISABLE_HEAVY_EFFECTS</string>
     <string name="tu_disable_heavy_effects_desc">Disable heavy visual effects for maximum performance</string>
     <string name="add_button">Add Button</string>

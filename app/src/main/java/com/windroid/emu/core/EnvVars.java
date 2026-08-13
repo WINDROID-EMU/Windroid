@@ -43,6 +43,7 @@ import static com.windroid.emu.activities.MainActivity.selectedTuTextureLodBias;
 import static com.windroid.emu.activities.MainActivity.selectedTuForceMipLevel;
 import static com.windroid.emu.activities.MainActivity.enableTuForceShadingRate;
 import static com.windroid.emu.activities.MainActivity.enableTuForceSysmem;
+import static com.windroid.emu.activities.MainActivity.enableTuDisableShadows;
 import static com.windroid.emu.activities.MainActivity.enableTuDisableHeavyEffects;
 import static com.windroid.emu.activities.MainActivity.selectedVramLimit;
 import static com.windroid.emu.activities.MainActivity.selectedWine;
@@ -147,6 +148,10 @@ public class EnvVars {
 
         if (enableTuForceSysmem) {
             vars.add("TU_FORCE_SYSMEM=1");
+        }
+
+        if (enableTuDisableShadows) {
+            vars.add("TU_DISABLE_SHADOWS=1");
         }
 
         if (enableTuDisableHeavyEffects) {

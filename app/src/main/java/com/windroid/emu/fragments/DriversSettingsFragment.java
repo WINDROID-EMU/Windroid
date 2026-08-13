@@ -35,6 +35,8 @@ import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORC
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SHADING_RATE_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_SHADOWS;
+import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_SHADOWS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS;
 import static com.windroid.emu.activities.GeneralSettingsActivity.ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE;
 import static com.windroid.emu.activities.GeneralSettingsActivity.SELECTED_VRAM_LIMIT;
@@ -114,6 +116,9 @@ public class DriversSettingsFragment extends Fragment {
                 addToAdapter(R.string.tu_force_sysmem_title, R.string.tu_force_sysmem_desc, null, SWITCH,
                                 String.valueOf(ENABLE_TU_FORCE_SYSMEM_DEFAULT_VALUE),
                                 ENABLE_TU_FORCE_SYSMEM);
+                addToAdapter(R.string.tu_disable_shadows_title, R.string.tu_disable_shadows_desc, null, SWITCH,
+                                String.valueOf(ENABLE_TU_DISABLE_SHADOWS_DEFAULT_VALUE),
+                                ENABLE_TU_DISABLE_SHADOWS);
                 addToAdapter(R.string.tu_disable_heavy_effects_title, R.string.tu_disable_heavy_effects_desc, null, SWITCH,
                                 String.valueOf(ENABLE_TU_DISABLE_HEAVY_EFFECTS_DEFAULT_VALUE),
                                 ENABLE_TU_DISABLE_HEAVY_EFFECTS);
