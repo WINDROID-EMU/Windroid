@@ -8,7 +8,6 @@ import static com.windroid.emu.activities.MainActivity.preferences;
 import static com.windroid.emu.activities.MainActivity.ratPackagesDir;
 import static com.windroid.emu.core.ShellLoader.runCommand;
 import static com.windroid.emu.core.TarUtils.getFileStreamFromTarXZ;
-import static com.windroid.emu.core.TarUtils.isDwarfs;
 import static com.windroid.emu.core.TarUtils.isXZ;
 import static com.windroid.emu.core.TarUtils.untar;
 import static com.windroid.emu.fragments.SetupFragment.progressBarIsIndeterminate;
@@ -63,20 +62,6 @@ public class RatPackageManager {
             try {
                 untar(ratPackage.ratFile.getPath(), extractDir);
             } catch (IOException e) {
-                return;
-            }
-        } else if (ratPackage.isDwarfsPackage) {
-            progressBarIsIndeterminate = true;
-            String dwarfsCmd = DwarfsExtractHelper.buildExtractCommand(
-                    context, ratPackage.ratFile.getPath(), extractDir);
-            if (dwarfsCmd == null) {
-                Log.e(TAG, "dwarfsextract binary not available");
-                return;
-            }
-            int ret = runCommand(dwarfsCmd, false);
-            progressBarIsIndeterminate = false;
-            if (ret != 0) {
-                Log.e(TAG, "dwarfsextract failed with code: " + ret);
                 return;
             }
         } else {
@@ -573,7 +558,6 @@ public class RatPackageManager {
         String driverLib;
         boolean isUserInstalled;
         boolean isTarXZRat;
-        boolean isDwarfsPackage;
         File ratFile;
         String folderName;
 
@@ -582,29 +566,9 @@ public class RatPackageManager {
             InputStream inputStream = null;
 
             isTarXZRat = isXZ(ratPath);
-            isDwarfsPackage = !isTarXZRat && isDwarfs(ratPath);
 
             if (isTarXZRat) {
                 inputStream = getFileStreamFromTarXZ(ratPath, "pkg-header");
-            } else if (isDwarfsPackage) {
-                // Extract pkg-header from DwarFS image using dwarfsextract
-                android.content.Context ctx = com.windroid.emu.activities.MainActivity.getAppContext();
-                if (ctx != null) {
-                    String headerOut = ratFile.getParent();
-                    String dwarfsCmd = DwarfsExtractHelper.buildExtractPatternCommand(
-                            ctx, ratPath, headerOut, "pkg-header");
-                    if (dwarfsCmd != null) {
-                        runCommand(dwarfsCmd, false);
-                    }
-                    File headerFile = new File(headerOut, "pkg-header");
-                    if (headerFile.exists()) {
-                        try {
-                            byte[] headerBytes = java.nio.file.Files.readAllBytes(headerFile.toPath());
-                            inputStream = new ByteArrayInputStream(headerBytes);
-                            headerFile.delete();
-                        } catch (IOException ignored) {}
-                    }
-                }
             } else {
                 try (ZipFile zipFile = new ZipFile(ratFile)) {
                     if (!zipFile.isValidZipFile()) return;

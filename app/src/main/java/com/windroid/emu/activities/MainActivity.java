@@ -201,7 +201,6 @@ import com.windroid.emu.R;
 import com.windroid.emu.adapters.AdapterBottomNavigation;
 import com.windroid.emu.controller.ControllerUtils;
 import com.windroid.emu.activities.GeneralSettingsActivity;
-import com.windroid.emu.core.DwarfsExtractHelper;
 import com.windroid.emu.core.RatPackageManager;
 import com.windroid.emu.core.WineWrapper;
 import com.windroid.emu.databinding.ActivityMainBinding;
@@ -626,9 +625,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSharedVars(this);
 
-        // Pre-install dwarfsextract binary from assets in background
-        new Thread(() -> DwarfsExtractHelper.getBinaryPath(this)).start();
-
         // Fecha apps em segundo plano para liberar recursos
         new Thread(() -> killBackgroundApps(this)).start();
 
@@ -718,8 +714,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!setupDone && finishedWelcomeScreen) {
-            File rootfsFile = new File(appRootDir.getPath() + "/rootfs.dwarfs");
-            if (!rootfsFile.exists()) rootfsFile = new File(appRootDir.getPath() + "/rootfs.rat"); // legacy fallback
+            File rootfsFile = new File(appRootDir.getPath() + "/rootfs.rat");
             if (rootFSIsDownloaded && rootfsFile.exists()) {
                 sendBroadcast(new Intent(ACTION_SETUP).setPackage("com.windroid.emu"));
             } else {
@@ -961,10 +956,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (rootFSIsDownloaded) {
             dialogTitleText = getString(R.string.checking_rat_type);
-            java.io.File dwarfsRootfs = new java.io.File(appRootDir, "rootfs.dwarfs");
-            java.io.File ratRootfs = new java.io.File(appRootDir, "rootfs.rat");
-            String rootfsPath = dwarfsRootfs.exists() ? dwarfsRootfs.getPath() : ratRootfs.getPath();
-            ratFile = new RatPackageManager.RatPackage(rootfsPath);
+            ratFile = new RatPackageManager.RatPackage(appRootDir.getPath() + "/rootfs.rat");
         } else {
             dialogTitleText = getString(R.string.checking_rat_type);
             ratFile = new RatPackageManager.RatPackage(customRootFSPath);
@@ -998,8 +990,7 @@ public class MainActivity extends AppCompatActivity {
         installRat(ratFile, this);
 
         if (rootFSIsDownloaded) {
-            new File(appRootDir.getPath() + "/rootfs.dwarfs").delete();
-            new File(appRootDir.getPath() + "/rootfs.rat").delete(); // cleanup legacy
+            new File(appRootDir.getPath() + "/rootfs.rat").delete();
             rootFSIsDownloaded = false; // Reset flag after successful installation
         }
 
