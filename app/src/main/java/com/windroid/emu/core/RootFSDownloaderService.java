@@ -124,7 +124,7 @@ public class RootFSDownloaderService extends Service {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://github.com/WINDROID-EMU/Windroid-Rootfs/releases/download/" + commit + "/Windroid-RootFS-" + commit + "-" + deviceArch + ".rat")
+                .url("https://github.com/WINDROID-EMU/Windroid-Rootfs/releases/download/" + commit + "/Windroid-RootFS-" + commit + "-" + deviceArch + ".dwarfs")
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -157,7 +157,7 @@ public class RootFSDownloaderService extends Service {
                 }
             });
 
-            File file = new File(appRootDir, "rootfs.rat");
+            File file = new File(appRootDir, "rootfs.dwarfs");
 
             try (BufferedSource source = progressBody.source();
                  OutputStream output = new FileOutputStream(file)

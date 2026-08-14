@@ -38,6 +38,26 @@ public class TarUtils {
     }
 
 
+    /**
+     * Detect DwarFS images by their magic bytes: 'DWARFS' (0x44 0x57 0x41 0x52 0x46 0x53)
+     */
+    public static boolean isDwarfs(String filePath) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            byte[] header = new byte[6];
+            if (fis.read(header) != 6) return false;
+
+            return header[0] == 0x44 && // D
+                    header[1] == 0x57 && // W
+                    header[2] == 0x41 && // A
+                    header[3] == 0x52 && // R
+                    header[4] == 0x46 && // F
+                    header[5] == 0x53;   // S
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+
     public static InputStream getFileStreamFromTarXZ(String filePath, String fileName) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);

@@ -221,7 +221,8 @@ public class AdapterFiles extends RecyclerView.Adapter<AdapterFiles.ViewHolder> 
                                 .show();
                     }
                 } else if (item.file.isFile()) {
-                    if (item.file.getName().toLowerCase().endsWith(".rat")) {
+                    if (item.file.getName().toLowerCase().endsWith(".rat") ||
+                            item.file.getName().toLowerCase().endsWith(".dwarfs")) {
                         customRootFSPath = item.file.getPath();
                     } else {
                         outputFile = item.file;
